@@ -63,7 +63,7 @@ public class DateView extends RelativeLayout implements View.OnClickListener, Vi
     }
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
-        inflate(getContext(), R.layout.view_dateview, this);
+        inflate(context, R.layout.view_dateview, this);
 
         setDefaultAttributes();
 

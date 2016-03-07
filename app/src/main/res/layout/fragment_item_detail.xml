@@ -26,5 +26,82 @@
         custom:drawableRight="@drawable/ic_reset"
         custom:hint="@string/edt_hint_due_date" />
 
+    <android.support.percent.PercentRelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/tiv_timeview2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
+
+        <ImageView
+            android:id="@+id/imv_alarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:padding="2dp"
+            android:src="@drawable/ic_alarm" />
+
+        <TextView
+            android:id="@+id/tev_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/imv_alarm"
+            android:hint="erinnern: 07.03.2017"
+            android:inputType="date"
+            android:paddingLeft="4dp"
+            android:textSize="16sp"
+            app:layout_widthPercent="45%" />
+
+        <TextView
+            android:id="@+id/tev_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/imv_reset"
+            android:layout_toRightOf="@+id/tev_date"
+            android:inputType="date"
+            android:paddingLeft="4dp"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/imv_reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackground"
+            android:padding="2dp"
+            android:src="@drawable/ic_reset" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignBottom="@id/imv_reset"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_toRightOf="@id/imv_alarm"
+            android:background="@color/colorEditTextDivider"
+            app:layout_widthPercent="45%" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignBottom="@id/imv_reset"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_toRightOf="@id/divider"
+            android:background="@color/colorEditTextDivider" />
+
+    </android.support.percent.PercentRelativeLayout>
+
+    <com.example.aufgabenundnotizen.customviews.TimeView
+        android:id="@+id/tiv_timeview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp" />
+
 </LinearLayout>
 
