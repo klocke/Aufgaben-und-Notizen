@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Aufgaben und Notizen</string>
+    <string name="title_action_settings">Einstellungen</string>
+    <string name="title_action_add_item">hinzufügen</string>
+    <string name="title_action_filter">filter</string>
+    <string name="tab_title_all">Alle</string>
+    <string name="tab_title_todos">Aufgaben</string>
+    <string name="tab_title_notes">Notizen</string>
+    <string name="title_action_finished">Fertig</string>
+    <string name="edt_hint_title">Titel</string>
+    <string name="title_item_detail_add_todo">Aufgabe hinzufügen</string>
+    <string name="title_item_detail_add_note">Notiz hinzufügen</string>
+    <string name="title_item_detail_edit_todo">Aufgabe bearbeiten</string>
+    <string name="title_item_detail_edit_note">Notiz bearbeiten</string>
+    <string name="edt_hint_due_date">Fälligkeitsdatum</string>
+</resources>
