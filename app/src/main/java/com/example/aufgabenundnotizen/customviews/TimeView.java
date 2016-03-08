@@ -2,24 +2,23 @@ package com.example.aufgabenundnotizen.customviews;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.Drawable;
 import android.support.percent.PercentRelativeLayout;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.aufgabenundnotizen.R;
 import com.example.aufgabenundnotizen.helpers.UniversalHelper;
 
+import java.util.Calendar;
+
 /**
  * Created by Tobias on 07.03.16.
  */
 public class TimeView extends PercentRelativeLayout implements View.OnClickListener, View.OnFocusChangeListener {
+
+    private Calendar mCalendar;
 
     private ImageView mImvAlarm;
     private ImageView mImvReset;
@@ -44,12 +43,12 @@ public class TimeView extends PercentRelativeLayout implements View.OnClickListe
     }
 
     private void init(AttributeSet attrs) {
-        inflate(getContext(), R.layout.view_timeview, this);
+        inflate(getContext(), R.layout.view_datetime, this);
 
         // benutzerdefinierte Attribute einlesen
         if (attrs != null) {
             TypedArray a = getContext().getTheme().obtainStyledAttributes(
-                    attrs, R.styleable.TimeView, 0, 0);
+                    attrs, R.styleable.DateTimeView, 0, 0);
             try {
                 // TODO:
             } finally {
@@ -85,7 +84,7 @@ public class TimeView extends PercentRelativeLayout implements View.OnClickListe
         int id = v.getId();
 
         if (id == R.id.imv_reset) {
-            Log.i("demo", "ImvReset clicked!");
+
         } else {
             this.requestFocus();
         }
@@ -108,7 +107,7 @@ public class TimeView extends PercentRelativeLayout implements View.OnClickListe
         if (hasFocus) {
             final int accentColor = UniversalHelper.getColor(getContext(), R.color.colorAccent);
 
-            changeImageViewDrawableColor(mImvAlarm, accentColor);
+            UniversalHelper.changeImageViewDrawableColor(mImvAlarm, accentColor);
             mDivider.setBackgroundColor(accentColor);
             mDivider2.setBackgroundColor(accentColor);
 
@@ -117,31 +116,31 @@ public class TimeView extends PercentRelativeLayout implements View.OnClickListe
             final int colorPrimaryDark = UniversalHelper.getColor(getContext(), R.color.colorPrimaryDark);
             final int dividerColor = UniversalHelper.getColor(getContext(), R.color.colorEditTextDivider);
 
-            changeImageViewDrawableColor(mImvAlarm, colorPrimaryDark);
+            UniversalHelper.changeImageViewDrawableColor(mImvAlarm, colorPrimaryDark);
             mDivider.setBackgroundColor(dividerColor);
             mDivider2.setBackgroundColor(dividerColor);
 
             dividerHeight = 1;
         }
 
-        setViewHeight(mDivider, dividerHeight);
-        setViewHeight(mDivider2, dividerHeight);
+        UniversalHelper.setViewHeight(mDivider, dividerHeight);
+        UniversalHelper.setViewHeight(mDivider2, dividerHeight);
     }
 
-    private void changeImageViewDrawableColor(ImageView imageView, int newColor) {
-        Drawable imvDrawable = imageView.getDrawable();
+    private void createTimePickerDialog() {
 
-        PorterDuffColorFilter porterDuffColorFilter = new PorterDuffColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
-        imvDrawable.setColorFilter(porterDuffColorFilter);
-
-        imageView.invalidateDrawable(imvDrawable);
     }
 
-    private void setViewHeight(View v, int heightInDp) {
-        ViewGroup.LayoutParams layoutParams = v.getLayoutParams();
-        layoutParams.height = UniversalHelper.convertDpToPixel(heightInDp);
+    private void createDatePickerDialog() {
 
-        v.setLayoutParams(layoutParams);
     }
 
+    public Calendar getCalendar() {
+        return mCalendar;
+    }
+
+    public void setCalendar(Calendar calendar) {
+        this.mCalendar = calendar;
+        // TODO: Set TextViews
+    }
 }

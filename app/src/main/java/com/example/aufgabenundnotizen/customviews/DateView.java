@@ -2,14 +2,12 @@ package com.example.aufgabenundnotizen.customviews;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.aufgabenundnotizen.R;
 import com.example.aufgabenundnotizen.helpers.DateHelper;
+import com.example.aufgabenundnotizen.helpers.UniversalHelper;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.DateFormat;
@@ -42,8 +41,8 @@ public class DateView extends RelativeLayout implements View.OnClickListener, Vi
     private final boolean DEF_ATTR_CLICKABLE = true;
     private final boolean DEF_ATTR_FOCUSABLE = true;
     private final boolean DEF_ATTR_FOCUSABLEINTOUCHMODE = true;
-    private final int DEF_ATTR_PADDINGTOP = convertDpToPixel(4);
-    private final int DEF_ATTR_PADDINGBOTTOM = convertDpToPixel(4);
+    private final int DEF_ATTR_PADDINGTOP = UniversalHelper.convertDpToPixel(4);
+    private final int DEF_ATTR_PADDINGBOTTOM = UniversalHelper.convertDpToPixel(4);
 
     private Date mDate;
 
@@ -203,12 +202,12 @@ public class DateView extends RelativeLayout implements View.OnClickListener, Vi
 
         if (hasFocus) {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mDivider.getLayoutParams();
-            layoutParams.height = convertDpToPixel(2);
+            layoutParams.height = UniversalHelper.convertDpToPixel(2);
 
             mDivider.setLayoutParams(layoutParams);
         } else {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mDivider.getLayoutParams();
-            layoutParams.height = convertDpToPixel(1);
+            layoutParams.height = UniversalHelper.convertDpToPixel(1);
 
             mDivider.setLayoutParams(layoutParams);
         }
@@ -277,10 +276,4 @@ public class DateView extends RelativeLayout implements View.OnClickListener, Vi
         setPadding(0, DEF_ATTR_PADDINGTOP, 0, DEF_ATTR_PADDINGBOTTOM);
     }
 
-    public static int convertDpToPixel(int dp){
-        Resources resources = Resources.getSystem();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        int px = dp * (metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
-        return px;
-    }
 }

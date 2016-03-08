@@ -8,7 +8,6 @@ import java.util.Date;
  */
 public class DateHelper {
 
-
     public static boolean wasYesterday(Date date) {
         return isEqual(date, -1);
     }
