@@ -27,6 +27,7 @@
         custom:hint="@string/edt_hint_due_date" />
 
     <com.example.customviews.DateTimeView
+        android:id="@+id/dtv_datetimeview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp" />

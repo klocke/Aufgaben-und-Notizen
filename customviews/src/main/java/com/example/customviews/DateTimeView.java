@@ -38,17 +38,17 @@ public class DateTimeView extends PercentRelativeLayout implements View.OnClickL
     private static final String ARG_DATETIME = "datetime";
 
     public DateTimeView(Context context) {
-        super(context, null, R.attr.timeViewDefStyle);
+        super(context, null, R.attr.dateTimeViewDefStyle);
         init();
     }
 
     public DateTimeView(Context context, AttributeSet attrs) {
-        super(context, attrs, R.attr.timeViewDefStyle);
+        super(context, attrs, R.attr.dateTimeViewDefStyle);
         init();
     }
 
     public DateTimeView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, R.attr.timeViewDefStyle);
+        super(context, attrs, R.attr.dateTimeViewDefStyle);
         init();
     }
 
@@ -112,7 +112,12 @@ public class DateTimeView extends PercentRelativeLayout implements View.OnClickL
     protected Parcelable onSaveInstanceState() {
         Bundle bundle = new Bundle();
         bundle.putParcelable(ARG_SUPERSTATE, super.onSaveInstanceState());
-        bundle.putSerializable(ARG_DATETIME, getDateTime());
+
+        DateTime dateTime = getDateTime();
+        if (dateTime != null) {
+            bundle.putSerializable(ARG_DATETIME, getDateTime());
+        }
+
         return bundle;
     }
 
@@ -122,8 +127,12 @@ public class DateTimeView extends PercentRelativeLayout implements View.OnClickL
             Bundle bundle = (Bundle) state;
 
             DateTime dateTime = (DateTime) bundle.getSerializable(ARG_DATETIME);
-            setDate(dateTime.toLocalDate());
-            setTime(dateTime.toLocalTime());
+
+            if (dateTime != null) {
+                setDate(dateTime.toLocalDate());
+                setTime(dateTime.toLocalTime());
+            }
+
             state = bundle.getParcelable(ARG_SUPERSTATE);
         }
         super.onRestoreInstanceState(state);

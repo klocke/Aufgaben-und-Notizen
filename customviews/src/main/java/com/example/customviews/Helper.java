@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.Duration;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
@@ -116,6 +117,12 @@ public class Helper {
     public static String getFormattedTimeString(LocalTime time) {
         DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm");
         return dtf.withLocale(Locale.GERMANY).print(time);
+    }
+
+    private static final DateTime JAN_1_1970 = new DateTime(1970, 1, 1, 0, 0, DateTimeZone.UTC);
+
+    public static long toMillisSinceEpoch(DateTime dateTime) {
+        return new Duration(JAN_1_1970, dateTime).getMillis();
     }
 
 }

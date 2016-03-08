@@ -2,15 +2,16 @@
 <resources>
 
     <style name="LibTheme">
-        <item name="timeViewDefStyle">@style/TimeViewStyle</item>
+        <item name="dateTimeViewDefStyle">@style/DateTimeViewStyle</item>
     </style>
 
-    <style name="TimeViewStyle">
+    <style name="DateTimeViewStyle">
         <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="android:focusableInTouchMode">true</item>
         <item name="android:paddingTop">4dp</item>
         <item name="android:paddingBottom">4dp</item>
+        <item name="android:saveEnabled">true</item>
     </style>
 </resources>

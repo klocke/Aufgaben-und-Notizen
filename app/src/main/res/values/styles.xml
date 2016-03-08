@@ -7,7 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="timeViewDefStyle">@style/TimeViewStyle</item>
+        <item name="timeViewDefStyle">@style/DateTimeViewStyle</item>
     </style>
 
     <!-- verhindert das die System Action Bar angezeigt wird.-->
