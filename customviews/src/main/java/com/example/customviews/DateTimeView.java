@@ -2,6 +2,8 @@ package com.example.customviews;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.percent.PercentRelativeLayout;
 import android.util.AttributeSet;
 import android.view.View;
@@ -31,6 +33,9 @@ public class DateTimeView extends PercentRelativeLayout implements View.OnClickL
     private TextView mTevTime;
     private View mDivider;
     private View mDivider2;
+
+    private static final String ARG_SUPERSTATE = "super_state";
+    private static final String ARG_DATETIME = "datetime";
 
     public DateTimeView(Context context) {
         super(context, null, R.attr.timeViewDefStyle);
@@ -103,6 +108,26 @@ public class DateTimeView extends PercentRelativeLayout implements View.OnClickL
         }
     }
 
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ARG_SUPERSTATE, super.onSaveInstanceState());
+        bundle.putSerializable(ARG_DATETIME, getDateTime());
+        return bundle;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof Bundle) {
+            Bundle bundle = (Bundle) state;
+
+            DateTime dateTime = (DateTime) bundle.getSerializable(ARG_DATETIME);
+            setDate(dateTime.toLocalDate());
+            setTime(dateTime.toLocalTime());
+            state = bundle.getParcelable(ARG_SUPERSTATE);
+        }
+        super.onRestoreInstanceState(state);
+    }
 
     @Override
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
