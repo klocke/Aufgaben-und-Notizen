@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="LibTheme">
-        <item name="dateTimeViewDefStyle">@style/DateTimeViewStyle</item>
+    <style name="LibTheme" parent="Theme.AppCompat.Light">
+        <item name="dateViewDefStyle">@style/DateViewStyle</item>
     </style>
 
-    <style name="DateTimeViewStyle">
+    <attr name="dateViewDefStyle" format="reference" />
+
+    <style name="DateViewStyle">
         <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>

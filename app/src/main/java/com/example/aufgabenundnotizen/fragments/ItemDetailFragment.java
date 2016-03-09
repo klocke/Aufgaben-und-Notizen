@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.example.aufgabenundnotizen.R;
-import com.example.aufgabenundnotizen.customviews.DateView;
 import com.example.aufgabenundnotizen.helpers.Args;
 import com.example.aufgabenundnotizen.loaders.SingleItemLoader;
 import com.example.aufgabenundnotizen.models.Item;
+import com.example.customviews.DateView;
 
 /**
  * Dieses Fragment stellt eine einzelne Item Detailansicht dar.

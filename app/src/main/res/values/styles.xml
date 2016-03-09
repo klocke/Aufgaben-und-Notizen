@@ -7,7 +7,9 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="timeViewDefStyle">@style/DateTimeViewStyle</item>
+        <!-- Der Style wird hier nochmal referenziert, damit der Designer ihn auflösen kann. -->
+        <item name="dateViewDefStyle">@style/DateViewStyle</item>
+
     </style>
 
     <!-- verhindert das die System Action Bar angezeigt wird.-->
@@ -19,14 +21,5 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="TimeViewStyle">
-        <item name="android:background">?attr/selectableItemBackground</item>
-        <item name="android:clickable">true</item>
-        <item name="android:focusable">true</item>
-        <item name="android:focusableInTouchMode">true</item>
-        <item name="android:paddingTop">4dp</item>
-        <item name="android:paddingBottom">4dp</item>
-    </style>
 
 </resources>

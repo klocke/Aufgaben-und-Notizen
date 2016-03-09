@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/imv_alarm"
-        android:hint="@string/tev_label_hint"
+        android:hint="@string/view_datetime_tev_label_hint"
         android:textSize="12sp" />
 
     <TextView
@@ -27,7 +27,7 @@
         android:layout_below="@+id/tev_label"
         android:layout_marginBottom="4dp"
         android:layout_toRightOf="@+id/imv_alarm"
-        android:hint="@string/tev_date_hint"
+        android:hint="@string/view_datetime_tev_date_hint"
         android:paddingLeft="4dp"
         android:textSize="16sp"
         app:layout_widthPercent="45%" />
@@ -40,8 +40,8 @@
         android:layout_alignTop="@+id/tev_date"
         android:layout_toLeftOf="@+id/imv_reset"
         android:layout_toRightOf="@+id/tev_date"
+        android:hint="@string/view_datetime_tev_time_hint"
         android:paddingLeft="4dp"
-        android:hint="@string/tev_time_hint"
         android:textSize="16sp" />
 
     <ImageView
@@ -52,7 +52,8 @@
         android:layout_alignParentRight="true"
         android:background="?attr/selectableItemBackground"
         android:padding="2dp"
-        android:src="@drawable/ic_reset" />
+        android:src="@drawable/ic_reset"
+        android:tag="@string/reset_tag"/>
 
     <View
         android:id="@+id/divider"

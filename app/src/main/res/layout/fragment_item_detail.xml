@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto/com.example.aufgabenundnotizen.customviews"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_detail"
     android:layout_width="match_parent"
@@ -17,14 +16,11 @@
         android:hint="@string/edt_hint_title"
         android:textSize="16sp" />
 
-    <com.example.aufgabenundnotizen.customviews.DateView
+    <com.example.customviews.DateView
         android:id="@+id/dav_dateview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        custom:drawableLeft="@drawable/ic_calendar"
-        custom:drawableRight="@drawable/ic_reset"
-        custom:hint="@string/edt_hint_due_date" />
+        android:layout_marginTop="15dp" />
 
     <com.example.customviews.DateTimeView
         android:id="@+id/dtv_datetimeview"

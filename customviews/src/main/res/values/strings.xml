@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Custom Views</string>
-    <string name="tev_label_hint">Erinnerung</string>
-    <string name="tev_date_hint">Datum</string>
-    <string name="tev_time_hint">Uhrzeit</string>
+    <string name="view_datetime_tev_label_hint">erinnern</string>
+    <string name="view_datetime_tev_date_hint">Datum</string>
+    <string name="view_datetime_tev_time_hint">Uhrzeit</string>
+    <string name="view_date_tev_label_hint">fällig</string>
+    <string name="view_date_tev_date_hint">Datum</string>
+    <string name="reset_tag">reset</string>
 </resources>

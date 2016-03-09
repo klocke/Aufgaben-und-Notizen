@@ -12,5 +12,4 @@
     <string name="title_item_detail_add_note">Notiz hinzufügen</string>
     <string name="title_item_detail_edit_todo">Aufgabe bearbeiten</string>
     <string name="title_item_detail_edit_note">Notiz bearbeiten</string>
-    <string name="edt_hint_due_date">Fälligkeitsdatum</string>
 </resources>

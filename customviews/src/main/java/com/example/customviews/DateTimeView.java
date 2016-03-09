@@ -3,27 +3,27 @@ package com.example.customviews;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.percent.PercentRelativeLayout;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.util.Locale;
 
 /**
  * Created by Tobias on 07.03.16.
  */
-public class DateTimeView extends PercentRelativeLayout implements View.OnClickListener, View.OnFocusChangeListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+public class DateTimeView extends DateViewBase implements TimePickerDialog.OnTimeSetListener {
 
-    private LocalDate mDate;
     private LocalTime mTime;
 
     private ImageView mImvAlarm;
@@ -34,21 +34,20 @@ public class DateTimeView extends PercentRelativeLayout implements View.OnClickL
     private View mDivider;
     private View mDivider2;
 
-    private static final String ARG_SUPERSTATE = "super_state";
     private static final String ARG_DATETIME = "datetime";
 
     public DateTimeView(Context context) {
-        super(context, null, R.attr.dateTimeViewDefStyle);
+        super(context);
         init();
     }
 
     public DateTimeView(Context context, AttributeSet attrs) {
-        super(context, attrs, R.attr.dateTimeViewDefStyle);
+        super(context, attrs);
         init();
     }
 
     public DateTimeView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, R.attr.dateTimeViewDefStyle);
+        super(context, attrs, defStyle);
         init();
     }
 
@@ -67,115 +66,86 @@ public class DateTimeView extends PercentRelativeLayout implements View.OnClickL
         mTevTime = (TextView) this.findViewById(R.id.tev_time);
         mDivider = this.findViewById(R.id.divider);
         mDivider2 = this.findViewById(R.id.divider2);
-
-        this.setOnClickListener(this);
-        this.setOnFocusChangeListener(this);
-
-        for (int i = 0; i < this.getChildCount(); i++) {
-            View child = this.getChildAt(i);
-
-            child.setOnClickListener(this);
-            child.setOnFocusChangeListener(this);
-        }
     }
 
     @Override
-    public void onClick(View v) {
-        int id = v.getId();
+    protected void onViewClick(View child) {
+        int id = child.getId();
 
-        if (id == R.id.imv_reset) {
-            setDate(null);
-            setTime(null);
+        if (id == R.id.tev_date | id == R.id.divider) {
+            createDatePickerDialog();
         } else {
-            this.requestFocus();
-
-            if (id == R.id.tev_date | id == R.id.divider) {
-                createDatePickerDialog();
-            } else {
-                createTimePickerDialog();
-            }
+            createTimePickerDialog();
         }
     }
 
     @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        int id = v.getId();
-
-        if (id == this.getId() && hasFocus) {
-            focusAnimation(true);
-        } else {
-            focusAnimation(false);
-        }
+    protected void onViewReset() {
+        setDate(null);
+        setTime(null);
     }
 
     @Override
-    protected Parcelable onSaveInstanceState() {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(ARG_SUPERSTATE, super.onSaveInstanceState());
-
+    protected Bundle putStateData() {
+        Bundle stateData = null;
         DateTime dateTime = getDateTime();
+
         if (dateTime != null) {
-            bundle.putSerializable(ARG_DATETIME, getDateTime());
+            stateData = new Bundle();
+            stateData.putSerializable(ARG_DATETIME, dateTime);
         }
 
-        return bundle;
+        return stateData;
     }
 
     @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-        if (state instanceof Bundle) {
-            Bundle bundle = (Bundle) state;
+    protected void getStateData(Bundle stateData) {
+        DateTime dateTime = (DateTime) stateData.getSerializable(ARG_DATETIME);
 
-            DateTime dateTime = (DateTime) bundle.getSerializable(ARG_DATETIME);
-
-            if (dateTime != null) {
-                setDate(dateTime.toLocalDate());
-                setTime(dateTime.toLocalTime());
-            }
-
-            state = bundle.getParcelable(ARG_SUPERSTATE);
+        if (dateTime != null) {
+            setDate(dateTime.toLocalDate());
+            setTime(dateTime.toLocalTime());
         }
-        super.onRestoreInstanceState(state);
+    }
+
+    @Override
+    protected void onViewFocusGained() {
+        final int accentColor = Helper.getColorValueByAttr(getContext(), R.attr.colorAccent);
+        final int dividerHeight = Helper.convertDpToPixel(2);
+
+        changeImageViewDrawableColor(mImvAlarm, accentColor);
+        mDivider.setBackgroundColor(accentColor);
+        mDivider2.setBackgroundColor(accentColor);
+        setViewHeight(mDivider, dividerHeight);
+        setViewHeight(mDivider2, dividerHeight);
+    }
+
+    @Override
+    protected void onViewFocusLost() {
+        final int colorPrimaryDark = Helper.getColorValueByAttr(getContext(), R.attr.colorPrimaryDark);
+        final int dividerColor = Helper.getColorValueByRes(getContext(), R.color.colorEditTextDivider);
+        final int dividerHeight = Helper.convertDpToPixel(1);
+
+        changeImageViewDrawableColor(mImvAlarm, colorPrimaryDark);
+        mDivider.setBackgroundColor(dividerColor);
+        mDivider2.setBackgroundColor(dividerColor);
+        setViewHeight(mDivider, dividerHeight);
+        setViewHeight(mDivider2, dividerHeight);
     }
 
     @Override
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
-        setTime(new LocalTime(hourOfDay, minute, second));
-    }
-
-    @Override
-    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-        setDate(new LocalDate(year, monthOfYear, dayOfMonth));
-    }
-
-    private void focusAnimation(boolean hasFocus) {
-        int dividerHeight;
-
-        if (hasFocus) {
-            final int accentColor = Helper.getColorValueByAttr(getContext(), R.attr.colorAccent);
-
-            Helper.changeImageViewDrawableColor(mImvAlarm, accentColor);
-            mDivider.setBackgroundColor(accentColor);
-            mDivider2.setBackgroundColor(accentColor);
-
-            dividerHeight = 2;
-        } else {
-            final int colorPrimaryDark = Helper.getColorValueByAttr(getContext(), R.attr.colorPrimaryDark);
-            final int dividerColor = Helper.getColorValueByRes(getContext(), R.color.colorEditTextDivider);
-
-            Helper.changeImageViewDrawableColor(mImvAlarm, colorPrimaryDark);
-            mDivider.setBackgroundColor(dividerColor);
-            mDivider2.setBackgroundColor(dividerColor);
-
-            dividerHeight = 1;
-        }
-
-        Helper.setViewHeight(mDivider, dividerHeight);
-        Helper.setViewHeight(mDivider2, dividerHeight);
+        setTime(new LocalTime(hourOfDay, minute, 0));
     }
 
     private void createTimePickerDialog() {
-        DateTime dt = Helper.getGermanTime();
+        DateTime dt;
+
+        if (mTime != null) {
+            dt = mTime.toDateTimeToday();
+        } else {
+            dt = Helper.getGermanTime();
+        }
 
         TimePickerDialog tpd = TimePickerDialog.newInstance(
                 DateTimeView.this,
@@ -190,30 +160,19 @@ public class DateTimeView extends PercentRelativeLayout implements View.OnClickL
         }
     }
 
-    private void createDatePickerDialog() {
-        DateTime dt = Helper.getGermanTime();
-
-        DatePickerDialog dpd = DatePickerDialog.newInstance(
-                DateTimeView.this,
-                dt.getYear(),
-                dt.getMonthOfYear(),
-                dt.getDayOfMonth()
-        );
-
-        Activity activity = (Activity) getContext();
-
-        if (activity != null) {
-            dpd.show(activity.getFragmentManager(), "DatePickerDialog");
-        }
+    public String getFormattedTimeString(LocalTime time) {
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm");
+        return dtf.withLocale(Locale.GERMANY).print(time);
     }
 
+    @Override
     public void setDate(LocalDate date) {
         this.mDate = date;
 
         if (date != null) {
-            mTevDate.setText(Helper.getFormattedDateString(date));
+            mTevDate.setText(getFormattedDateString(date));
 
-            // Wenn noch keine Zeit gesetzt wurde, dann auf Mitternacht setzen
+            // Wenn noch keine Zeit gesetzt wurde, dann auf 8 Uhr setzen
             if (mTime == null) {
                 DateTime dateTime = Helper.getGermanTime();
                 setTime(LocalTime.MIDNIGHT);
@@ -227,7 +186,7 @@ public class DateTimeView extends PercentRelativeLayout implements View.OnClickL
         this.mTime = time;
 
         if (time != null) {
-            mTevTime.setText(Helper.getFormattedTimeString(time) + " Uhr");
+            mTevTime.setText(getFormattedTimeString(time) + " Uhr");
 
             // Wenn noch kein Datum gesetzt wurde, dann schauen ob
             // ausgewählte Zeit vor oder nach aktueller Zeit liegt und
@@ -262,5 +221,4 @@ public class DateTimeView extends PercentRelativeLayout implements View.OnClickL
             }
         }
     }
-
 }
