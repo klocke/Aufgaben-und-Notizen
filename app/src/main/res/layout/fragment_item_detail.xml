@@ -20,13 +20,97 @@
         android:id="@+id/dav_dateview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp" />
+        android:layout_marginTop="10dp" />
 
     <com.example.customviews.DateTimeView
         android:id="@+id/dtv_datetimeview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp" />
+        android:layout_marginTop="10dp" />
+
+    <RelativeLayout
+        android:id="@+id/lov_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/imv_place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:padding="2dp"
+            android:src="@drawable/ic_place" />
+
+        <EditText
+            android:id="@+id/edt_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/imv_my_locality"
+            android:layout_toRightOf="@+id/imv_place"
+            android:hint="Ort" />
+
+        <ImageButton
+            android:id="@+id/imv_my_locality"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackground"
+            android:padding="2dp"
+            android:src="@drawable/ic_my_locality" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Notizen"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/edt_notes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:inputType="textMultiLine"
+        android:lines="3"
+        android:scrollbars="vertical" />
+
+    <RelativeLayout
+        android:id="@+id/fiv_file"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:saveEnabled="true">
+
+        <ImageView
+            android:id="@+id/imv_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:padding="2dp"
+            android:src="@drawable/ic_attach_file" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/imv_file"
+            android:paddingLeft="4dp"
+            android:text="Datei hinzufügen"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
 
 </LinearLayout>
 

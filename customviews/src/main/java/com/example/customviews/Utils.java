@@ -13,10 +13,10 @@ import org.joda.time.Duration;
 /**
  * Created by Tobias on 07.03.16.
  */
-public final class Helper {
+public final class Utils {
 
-    private Helper() {
-        throw new IllegalStateException("Keine Instanzen.");
+    private Utils() {
+        throw new IllegalStateException("No instances.");
     }
 
     public static int convertDpToPixel(int dp) {

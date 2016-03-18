@@ -1,21 +1,22 @@
 package com.example.aufgabenundnotizen.models;
 
-import java.util.Date;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 /**
  * Created by Tobias on 16.02.16.
  */
 public class TodoItem extends Item {
 
-    private Date mDueDate;
-    private Date mReminderDate;
+    private LocalDate mDueDate;
+    private DateTime mReminderDate;
     private String mLocation;   // TODO
     private boolean mDone;
 
     /**
      * Konstruktor für neues Item.
      */
-    public TodoItem(String title, String notes, Date dueDate, Date reminderDate, String location) {
+    public TodoItem(String title, String notes, LocalDate dueDate, DateTime reminderDate, String location) {
         super(title, notes);
         mDueDate = dueDate;
         mReminderDate = reminderDate;
@@ -26,7 +27,7 @@ public class TodoItem extends Item {
     /**
      * Konstruktur um Eigenschaften eines "bestehenden" wieder herzustellen.
      */
-    public TodoItem(String id, String title, Date creationDate, boolean done, Date dueDate, Date reminderDate, String location, String notes) {
+    public TodoItem(String id, String title, DateTime creationDate, boolean done, LocalDate dueDate, DateTime reminderDate, String location, String notes) {
         super(id, title, creationDate, notes);
         mDueDate = dueDate;
         mReminderDate = reminderDate;
@@ -34,19 +35,19 @@ public class TodoItem extends Item {
         mDone = done;
     }
 
-    public Date getDueDate() {
+    public LocalDate getDueDate() {
         return mDueDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(LocalDate dueDate) {
         mDueDate = dueDate;
     }
 
-    public Date getReminderDate() {
+    public DateTime getReminderDate() {
         return mReminderDate;
     }
 
-    public void setReminderDate(Date reminderDate) {
+    public void setReminderDate(DateTime reminderDate) {
         mReminderDate = reminderDate;
     }
 

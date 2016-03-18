@@ -1,6 +1,9 @@
 package com.example.aufgabenundnotizen.models;
 
-import java.util.Date;
+import com.example.aufgabenundnotizen.helpers.JodaTimeUtils;
+
+import org.joda.time.DateTime;
+
 import java.util.UUID;
 
 /**
@@ -10,7 +13,7 @@ public abstract class Item {
 
     protected String mId;
     protected String mTitle;
-    protected Date mCreationDate;
+    protected DateTime mCreationDate;
     protected String mNotes;
     protected byte[] mFiles;    // List byte Array?!
 
@@ -23,13 +26,13 @@ public abstract class Item {
         mTitle = title;
         mNotes = notes;
         mId = UUID.randomUUID().toString(); // eindeutigen Schlüssel erzeugen
-        mCreationDate = new Date(); // aktuellen Zeitpunkt speichern
+        mCreationDate = JodaTimeUtils.getGermanTime(); // aktuellen Zeitpunkt speichern
     }
 
     /**
      * Konstruktur um Eigenschaften eines "bestehenden" wieder herzustellen.
      */
-    public Item(String id, String title, Date creationDate, String notes) {
+    public Item(String id, String title, DateTime creationDate, String notes) {
         mId = id;
         mTitle = title;
         mCreationDate = creationDate;
@@ -48,7 +51,7 @@ public abstract class Item {
         mTitle = title;
     }
 
-    public Date getCreationDate() {
+    public DateTime getCreationDate() {
         return mCreationDate;
     }
 
@@ -65,7 +68,7 @@ public abstract class Item {
         return mFiles;
     }
 
-    public void setmFiles(byte[] files) {
+    public void setFiles(byte[] files) {
         mFiles = files;
     }
 
@@ -73,4 +76,5 @@ public abstract class Item {
     public String toString() {
         return "Id: " + mId + "\tTitel: " + mTitle + "\tErstellungsdatum: " + mCreationDate + "\t";
     }
+
 }

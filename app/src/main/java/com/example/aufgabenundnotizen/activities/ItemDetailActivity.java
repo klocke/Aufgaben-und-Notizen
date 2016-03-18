@@ -13,7 +13,7 @@ import android.view.MenuItem;
 
 import com.example.aufgabenundnotizen.R;
 import com.example.aufgabenundnotizen.fragments.ItemDetailFragment;
-import com.example.aufgabenundnotizen.helpers.Args;
+import com.example.aufgabenundnotizen.helpers.Constants;
 import com.example.aufgabenundnotizen.loaders.BaseLoader;
 import com.example.aufgabenundnotizen.other.FilterType;
 
@@ -27,11 +27,12 @@ public class ItemDetailActivity extends AppCompatActivity {
 
     private boolean mIsNewItem;
     private FilterType mFilterType;
+    private boolean mShouldSave;
 
     public static void start(Context context, String itemId, FilterType filterType) {
         Bundle extras = new Bundle();
-        extras.putString(Args.ARG_ITEM_ID, itemId);
-        extras.putSerializable(Args.ARG_ITEMS_FILTER, filterType);
+        extras.putString(Constants.ARG_ITEM_ID, itemId);
+        extras.putSerializable(Constants.ARG_ITEMS_FILTER, filterType);
 
         Intent intent = new Intent(context, ItemDetailActivity.class);
         intent.putExtras(extras);
@@ -56,8 +57,8 @@ public class ItemDetailActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             // Wenn keine Item Id mitgegeben wurde, handelt es sich um ein neues Item
-            mIsNewItem = extras.getString(Args.ARG_ITEM_ID) == null;
-            mFilterType = (FilterType) extras.getSerializable(Args.ARG_ITEMS_FILTER);
+            mIsNewItem = extras.getString(Constants.ARG_ITEM_ID) == null;
+            mFilterType = (FilterType) extras.getSerializable(Constants.ARG_ITEMS_FILTER);
 
             setupTitle(actionBar, mIsNewItem, mFilterType);
 
@@ -91,12 +92,7 @@ public class ItemDetailActivity extends AppCompatActivity {
                 navigateUp();
                 return true;
             case R.id.action_finished:
-                if (mIsNewItem) {
-                    // TODO: AsyncTask Datenbank insert
-
-                } else {
-                    // TODO: AsyncTask altes Item updaten
-                }
+                mShouldSave = true;
 
                 // Bei Klick auf Fertig wird der Loader benachrichtigt und lädt erneut.
                 Intent intent = new Intent(BaseLoader.ACTION_FORCE_LOAD);
@@ -155,4 +151,11 @@ public class ItemDetailActivity extends AppCompatActivity {
         }
     }
 
+    public boolean shouldSave() {
+        return mShouldSave;
+    }
+
+    public void setShouldSave(boolean shouldSave) {
+        mShouldSave = shouldSave;
+    }
 }

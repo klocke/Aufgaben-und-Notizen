@@ -6,10 +6,11 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.aufgabenundnotizen.helpers.JodaTimeUtils;
 import com.example.aufgabenundnotizen.models.NoteItem;
 import com.example.aufgabenundnotizen.models.TodoItem;
 
-import java.util.Date;
+import org.joda.time.LocalDate;
 
 /**
  * Created by Tobias on 22.02.16.
@@ -20,7 +21,7 @@ import java.util.Date;
 class DatabaseHandler extends SQLiteOpenHelper {
 
     // Meta infos
-    static final int DATABASE_VERSION = 5;
+    static final int DATABASE_VERSION = 6;
     static final String DATABASE_NAME = "items.db";
 
     // Tabellen
@@ -118,15 +119,15 @@ class DatabaseHandler extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
 
             if (i % 2 == 0) {
-                TodoItem todoItem = new TodoItem("todo " + i, "todoNotes " + i, new Date(), new Date(), "todoLocation " + i);
+                TodoItem todoItem = new TodoItem("todo " + i, "todoNotes " + i, new LocalDate(JodaTimeUtils.getGermanTimeZone()), JodaTimeUtils.getGermanTime(), "todoLocation " + i);
 
                 values.put(KEY_TYPE, TYPE_TODO);
                 values.put(KEY_ID, todoItem.getId());
                 values.put(KEY_TITLE, todoItem.getTitle());
-                values.put(KEY_CREATIONDATE, DatabaseAdapter.convertToMilliseconds(todoItem.getCreationDate()));
+                values.put(KEY_CREATIONDATE, JodaTimeUtils.toMillisSinceEpoch(todoItem.getCreationDate()));
                 values.put(KEY_NOTES, todoItem.getNotes());
-                values.put(KEY_DUEDATE, DatabaseAdapter.convertToMilliseconds(todoItem.getDueDate()));
-                values.put(KEY_REMINDERDATE, DatabaseAdapter.convertToMilliseconds(todoItem.getReminderDate()));
+                values.put(KEY_DUEDATE, JodaTimeUtils.toMillisSinceEpoch(todoItem.getDueDate()));
+                values.put(KEY_REMINDERDATE, JodaTimeUtils.toMillisSinceEpoch(todoItem.getReminderDate()));
                 values.put(KEY_LOCATION, todoItem.getLocation());
                 values.put(KEY_DONE, todoItem.getDone());
             } else {
@@ -135,7 +136,7 @@ class DatabaseHandler extends SQLiteOpenHelper {
                 values.put(KEY_TYPE, TYPE_NOTE);
                 values.put(KEY_ID, noteItem.getId());
                 values.put(KEY_TITLE, noteItem.getTitle());
-                values.put(KEY_CREATIONDATE, DatabaseAdapter.convertToMilliseconds(noteItem.getCreationDate()));
+                values.put(KEY_CREATIONDATE, JodaTimeUtils.toMillisSinceEpoch(noteItem.getCreationDate()));
                 values.put(KEY_NOTES, noteItem.getNotes());
             }
 

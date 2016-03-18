@@ -26,9 +26,11 @@ import java.util.Locale;
 /**
  * Created by Tobias on 08.03.16.
  */
-abstract class DateViewBase extends PercentRelativeLayout implements View.OnClickListener, View.OnFocusChangeListener, DatePickerDialog.OnDateSetListener {
+public abstract class DateViewBase extends PercentRelativeLayout implements View.OnClickListener, View.OnFocusChangeListener, DatePickerDialog.OnDateSetListener {
 
     protected LocalDate mDate;
+
+    protected OnHasChangesListener mOnHasChangesListener;
 
     private static final String ARG_SUPERSTATE = "super_state";
     private static final String ARG_STATEDATA = "state_data";
@@ -45,6 +47,14 @@ abstract class DateViewBase extends PercentRelativeLayout implements View.OnClic
 
     public DateViewBase(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, R.attr.dateViewDefStyle);
+    }
+
+    public interface OnHasChangesListener {
+        void onHasChanges(View v, boolean hasChanges);
+    }
+
+    public void setOnHasChangesListener(OnHasChangesListener l) {
+        mOnHasChangesListener = l;
     }
 
     @Override
@@ -166,7 +176,7 @@ abstract class DateViewBase extends PercentRelativeLayout implements View.OnClic
         if (mDate != null) {
             dt = mDate.toDateTime(LocalTime.MIDNIGHT);
         } else {
-            dt = Helper.getGermanTime();
+            dt = Utils.getGermanTime();
         }
 
         DatePickerDialog dpd = DatePickerDialog.newInstance(
@@ -191,7 +201,7 @@ abstract class DateViewBase extends PercentRelativeLayout implements View.OnClic
         String formattedString;
         String pattern;
 
-        LocalDate dateNow = LocalDate.now(Helper.getGermanTimeZone());
+        LocalDate dateNow = LocalDate.now(Utils.getGermanTimeZone());
 
         if (date.isEqual(dateNow)) {
             formattedString = "Heute";
@@ -230,4 +240,5 @@ abstract class DateViewBase extends PercentRelativeLayout implements View.OnClic
     }
 
     public abstract void setDate(LocalDate date);
+
 }

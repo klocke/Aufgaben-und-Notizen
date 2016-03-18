@@ -1,11 +1,10 @@
 package com.example.aufgabenundnotizen.loaders;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.aufgabenundnotizen.data.DatabaseAdapter;
-import com.example.aufgabenundnotizen.other.FilterType;
 import com.example.aufgabenundnotizen.models.Item;
+import com.example.aufgabenundnotizen.other.FilterType;
 
 import java.util.List;
 
@@ -23,7 +22,6 @@ public class AllItemsLoader extends BaseLoader<List<Item>> {
 
     @Override
     public List<Item> loadInBackground() {
-        Log.i("demo", "AllItemsLoader:loadInBackground");
         return DatabaseAdapter.getInstance(getContext()).getItems(mFilterType);
     }
 }

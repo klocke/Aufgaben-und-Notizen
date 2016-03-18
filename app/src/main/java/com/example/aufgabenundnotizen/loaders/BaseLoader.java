@@ -7,6 +7,8 @@ import android.content.IntentFilter;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.example.aufgabenundnotizen.helpers.Constants;
+
 /**
  * Created by Tobias on 25.02.16.
  * Diese Klasse stellt eine eigene Implementierung des AsyncTaskLoaders dar,
@@ -18,7 +20,7 @@ public abstract class BaseLoader<T> extends AsyncTaskLoader<T> {
 
     protected T mData;
     protected BroadcastReceiver mReceiver;
-    public static final String ACTION_FORCE_LOAD = "com.example.aufgabenundnotizen.intent.action.FORCE_LOAD";
+    public static final String ACTION_FORCE_LOAD = Constants.PACKAGE_NAME + ".FORCE_LOAD";
 
     public BaseLoader(Context context) {
         super(context);

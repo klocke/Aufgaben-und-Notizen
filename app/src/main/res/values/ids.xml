@@ -2,4 +2,5 @@
 <resources>
     <item name="all_items_loader_id" type="id" />
     <item name="single_item_loader_id" type="id" />
+    <item name="refresh_item_loader_id" type="id" />
 </resources>

@@ -110,8 +110,8 @@ public class DateTimeView extends DateViewBase implements TimePickerDialog.OnTim
 
     @Override
     protected void onViewFocusGained() {
-        final int accentColor = Helper.getColorValueByAttr(getContext(), R.attr.colorAccent);
-        final int dividerHeight = Helper.convertDpToPixel(2);
+        final int accentColor = Utils.getColorValueByAttr(getContext(), R.attr.colorAccent);
+        final int dividerHeight = Utils.convertDpToPixel(2);
 
         changeImageViewDrawableColor(mImvAlarm, accentColor);
         mDivider.setBackgroundColor(accentColor);
@@ -122,9 +122,9 @@ public class DateTimeView extends DateViewBase implements TimePickerDialog.OnTim
 
     @Override
     protected void onViewFocusLost() {
-        final int colorPrimaryDark = Helper.getColorValueByAttr(getContext(), R.attr.colorPrimaryDark);
-        final int dividerColor = Helper.getColorValueByRes(getContext(), R.color.colorEditTextDivider);
-        final int dividerHeight = Helper.convertDpToPixel(1);
+        final int colorPrimaryDark = Utils.getColorValueByAttr(getContext(), R.attr.colorPrimaryDark);
+        final int dividerColor = Utils.getColorValueByRes(getContext(), R.color.colorEditTextDivider);
+        final int dividerHeight = Utils.convertDpToPixel(1);
 
         changeImageViewDrawableColor(mImvAlarm, colorPrimaryDark);
         mDivider.setBackgroundColor(dividerColor);
@@ -144,7 +144,7 @@ public class DateTimeView extends DateViewBase implements TimePickerDialog.OnTim
         if (mTime != null) {
             dt = mTime.toDateTimeToday();
         } else {
-            dt = Helper.getGermanTime();
+            dt = Utils.getGermanTime();
         }
 
         TimePickerDialog tpd = TimePickerDialog.newInstance(
@@ -168,13 +168,16 @@ public class DateTimeView extends DateViewBase implements TimePickerDialog.OnTim
     @Override
     public void setDate(LocalDate date) {
         this.mDate = date;
+        if (mOnHasChangesListener != null) {
+            mOnHasChangesListener.onHasChanges(this, true);
+        }
 
         if (date != null) {
             mTevDate.setText(getFormattedDateString(date));
 
             // Wenn noch keine Zeit gesetzt wurde, dann auf 8 Uhr setzen
             if (mTime == null) {
-                DateTime dateTime = Helper.getGermanTime();
+                DateTime dateTime = Utils.getGermanTime();
                 setTime(LocalTime.MIDNIGHT);
             }
         } else {
@@ -184,6 +187,9 @@ public class DateTimeView extends DateViewBase implements TimePickerDialog.OnTim
 
     public void setTime(LocalTime time) {
         this.mTime = time;
+        if (mOnHasChangesListener != null) {
+            mOnHasChangesListener.onHasChanges(this, true);
+        }
 
         if (time != null) {
             mTevTime.setText(getFormattedTimeString(time) + " Uhr");
@@ -192,7 +198,7 @@ public class DateTimeView extends DateViewBase implements TimePickerDialog.OnTim
             // ausgewählte Zeit vor oder nach aktueller Zeit liegt und
             // entspr. Datum auf Heute oder Morgen setzen
             if (mDate == null) {
-                DateTime dateTime = Helper.getGermanTime();
+                DateTime dateTime = Utils.getGermanTime();
 
                 if (mTime.isAfter(dateTime.toLocalTime())) {
                     setDate(dateTime.toLocalDate());

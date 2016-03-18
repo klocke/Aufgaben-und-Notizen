@@ -12,9 +12,9 @@
     tools:context=".activities.ItemListActivity">
 
     <!--
-    This layout is a two-pane layout for the Items
+    Dieses Layout ist ein two-pane Layout für die Items
     master/detail flow.
-    
+
     -->
 
     <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -28,10 +28,11 @@
         tools:context=".activities.ItemListActivity"
         tools:listitem="@layout/item_list_content" />
 
-    <FrameLayout
+    <android.support.v4.widget.NestedScrollView
         android:id="@+id/item_detail_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="3" />
+        android:layout_weight="3"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </LinearLayout>

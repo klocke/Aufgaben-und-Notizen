@@ -6,13 +6,16 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
-import com.example.aufgabenundnotizen.other.FilterType;
+import com.example.aufgabenundnotizen.helpers.JodaTimeUtils;
 import com.example.aufgabenundnotizen.models.Item;
 import com.example.aufgabenundnotizen.models.NoteItem;
 import com.example.aufgabenundnotizen.models.TodoItem;
+import com.example.aufgabenundnotizen.other.FilterType;
+
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -247,12 +250,12 @@ public class DatabaseAdapter {
         String cId = cursor.getString(columnAllocation.get(KEY_ID));
         String type = cursor.getString(columnAllocation.get(KEY_TYPE));
         String title = cursor.getString(columnAllocation.get(KEY_TITLE));
-        Date creationDate = getDate(cursor.getLong(columnAllocation.get(KEY_CREATIONDATE)));
+        DateTime creationDate = JodaTimeUtils.toDateTime(cursor.getLong(columnAllocation.get(KEY_CREATIONDATE)));
         String notes = cursor.getString(columnAllocation.get(KEY_NOTES));
 
         if (type.equals(TYPE_TODO)) {
-            Date dueDate = getDate(cursor.getLong(columnAllocation.get(KEY_DUEDATE)));
-            Date reminderDate = getDate(cursor.getLong(columnAllocation.get(KEY_REMINDERDATE)));
+            LocalDate dueDate = JodaTimeUtils.toLocalDate(cursor.getLong(columnAllocation.get(KEY_DUEDATE)));
+            DateTime reminderDate = JodaTimeUtils.toDateTime(cursor.getLong(columnAllocation.get(KEY_REMINDERDATE)));
             String location = cursor.getString(columnAllocation.get(KEY_LOCATION));
             boolean done = getBoolean(cursor.getInt(columnAllocation.get(KEY_DONE)));
 
@@ -268,15 +271,15 @@ public class DatabaseAdapter {
         ContentValues values = new ContentValues();
         values.put(KEY_ID, item.getId());
         values.put(KEY_TITLE, item.getTitle());
-        values.put(KEY_CREATIONDATE, convertToMilliseconds(item.getCreationDate()));
+        values.put(KEY_CREATIONDATE, JodaTimeUtils.toMillisSinceEpoch(item.getCreationDate()));
         values.put(KEY_NOTES, item.getNotes());
 
         if (item instanceof TodoItem) {
             TodoItem todoItem = (TodoItem) item;
 
             values.put(KEY_TYPE, TYPE_TODO);
-            values.put(KEY_DUEDATE, convertToMilliseconds(todoItem.getDueDate()));
-            values.put(KEY_REMINDERDATE, convertToMilliseconds(todoItem.getReminderDate()));
+            values.put(KEY_DUEDATE, JodaTimeUtils.toMillisSinceEpoch(todoItem.getDueDate()));
+            values.put(KEY_REMINDERDATE, JodaTimeUtils.toMillisSinceEpoch(todoItem.getReminderDate()));
             values.put(KEY_LOCATION, todoItem.getLocation());
             values.put(KEY_DONE, todoItem.getDone());
         } else if (item instanceof NoteItem) {
@@ -286,19 +289,6 @@ public class DatabaseAdapter {
         }
 
         return values;
-    }
-
-    /**
-     * In SQLite gibt es kein Date Format.
-     * Best practice: Spalte als "SQLite-Integer" anlegen und Millisekunden als "java-long" schreiben.
-     * (s. http://stackoverflow.com/a/13694823/4367848)
-     */
-    public static long convertToMilliseconds(Date date) {
-        return date.getTime();
-    }
-
-    public static Date getDate(long milliseconds) {
-        return new Date(milliseconds);
     }
 
     /**

@@ -29,9 +29,6 @@ import com.example.aufgabenundnotizen.other.FilterType;
  */
 public class ItemListActivity extends AppCompatActivity implements OnClickListener {
 
-    // zeigt, ob sich die Activity im two-pane Modus, z.B. bei Tablet Geräten befindet.
-    private boolean mTwoPane;
-
     private Toolbar mToolbar;
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
@@ -74,14 +71,6 @@ public class ItemListActivity extends AppCompatActivity implements OnClickListen
         mFabAdd.setOnClickListener(this);
         mFabAddTodo.setOnClickListener(this);
         mFabAddNote.setOnClickListener(this);
-
-        if (findViewById(R.id.item_detail_container) != null) {
-            // Die detail container view wird nur bei großen Bildschirmen
-            // vorhanden sein (res/values-w480dp).
-            // Wenn diese View vorhanden ist, dann sollte die Activity
-            // im two-pane Modus sein.
-            mTwoPane = true;
-        }
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -91,6 +80,9 @@ public class ItemListActivity extends AppCompatActivity implements OnClickListen
         adapter.addFragment(ItemListFragment.newInstance(FilterType.TODOS), getString(R.string.tab_title_todos));
         adapter.addFragment(ItemListFragment.newInstance(FilterType.NOTES), getString(R.string.tab_title_notes));
 
+        // Alle 3 Fragmente sollen in Speichern gehalten werden,
+        // um im EventBus die CallBacks zu empfangen.
+        viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(adapter);
     }
 

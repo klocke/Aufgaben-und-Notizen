@@ -20,6 +20,8 @@ public class DateView extends DateViewBase {
     private TextView mTevDate;
     private View mDivider;
 
+    private boolean mHasChanges;
+
     private static final String ARG_DATE = "date";
 
     public DateView(Context context) {
@@ -77,8 +79,8 @@ public class DateView extends DateViewBase {
 
     @Override
     protected void onViewFocusGained() {
-        final int accentColor = Helper.getColorValueByAttr(getContext(), R.attr.colorAccent);
-        final int dividerHeight = Helper.convertDpToPixel(2);
+        final int accentColor = Utils.getColorValueByAttr(getContext(), R.attr.colorAccent);
+        final int dividerHeight = Utils.convertDpToPixel(2);
 
         changeImageViewDrawableColor(mImvCalendar, accentColor);
         mDivider.setBackgroundColor(accentColor);
@@ -89,9 +91,9 @@ public class DateView extends DateViewBase {
     // daher wird sie systemintern aufgerufen, was zu unerwartetem Verhalten führt.
     @Override
     protected void onViewFocusLost() {
-        final int colorPrimaryDark = Helper.getColorValueByAttr(getContext(), R.attr.colorPrimaryDark);
-        final int dividerColor = Helper.getColorValueByRes(getContext(), R.color.colorEditTextDivider);
-        final int dividerHeight = Helper.convertDpToPixel(1);
+        final int colorPrimaryDark = Utils.getColorValueByAttr(getContext(), R.attr.colorPrimaryDark);
+        final int dividerColor = Utils.getColorValueByRes(getContext(), R.color.colorEditTextDivider);
+        final int dividerHeight = Utils.convertDpToPixel(1);
 
         changeImageViewDrawableColor(mImvCalendar, colorPrimaryDark);
         mDivider.setBackgroundColor(dividerColor);
@@ -101,6 +103,9 @@ public class DateView extends DateViewBase {
     @Override
     public void setDate(LocalDate date) {
         this.mDate = date;
+        if (mOnHasChangesListener != null) {
+            mOnHasChangesListener.onHasChanges(this, true);
+        }
 
         if (date != null) {
             mTevDate.setText(getFormattedDateString(date));
@@ -112,6 +117,5 @@ public class DateView extends DateViewBase {
     public LocalDate getDate() {
         return mDate;
     }
-
 
 }

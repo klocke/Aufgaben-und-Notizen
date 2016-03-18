@@ -1,6 +1,6 @@
 package com.example.aufgabenundnotizen.models;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
 /**
  * Created by Tobias on 16.02.16.
@@ -17,7 +17,7 @@ public class NoteItem extends Item {
     /**
      * Konstruktur um Eigenschaften eines "bestehenden" wieder herzustellen.
      */
-    public NoteItem(String id, String title, Date creationDate, String notes) {
+    public NoteItem(String id, String title, DateTime creationDate, String notes) {
         super(id, title, creationDate, notes);
     }
 }
