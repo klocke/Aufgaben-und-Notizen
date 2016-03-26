@@ -205,11 +205,33 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public boolean onItemLongClick(Item item) {
-        alertDelete(item).show();
+        alertActions(item).show();
         return false;
     }
 
-    private AlertDialog alertDelete(final Item item) {
+    private AlertDialog alertActions(final Item item){
+        CharSequence actions[] = new CharSequence[]{"Widget erstellen", "Löschen"}; //Strings auslagern
+
+        AlertDialog.Builder bldr = new AlertDialog.Builder(getContext());
+
+        bldr.setItems(actions, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+
+                        break;
+                    case 1:
+                        alertDelete(item).show();
+                        break;
+                }
+            }
+        });
+
+        return bldr.create();
+    }
+
+    private AlertDialog alertDelete(Item item) {
         String itemType;
 
         if (item instanceof NoteItem) {
@@ -227,9 +249,6 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
             public void onClick(DialogInterface dialog, int id) {
 
                 //TODO: Item löschen
-
-
-
             }
         });
         bldr.setNegativeButton(R.string.deleteNo, new DialogInterface.OnClickListener() {

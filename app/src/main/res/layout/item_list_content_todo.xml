@@ -3,7 +3,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-
     <!-- Einzelnes List Item so anpassen wie man möchte-->
     <ImageView
         android:layout_width="wrap_content"
