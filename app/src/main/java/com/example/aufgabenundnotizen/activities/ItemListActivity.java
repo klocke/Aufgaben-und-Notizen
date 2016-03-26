@@ -108,6 +108,8 @@ public class ItemListActivity extends AppCompatActivity implements OnClickListen
         }
     }
 
+
+
     private void animateFab() {
         if (mIsFabOpen) {
             mFabAdd.startAnimation(mRotateBackward);

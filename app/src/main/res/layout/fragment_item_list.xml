@@ -16,5 +16,5 @@
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
         tools:context=".activities.ItemListActivity"
-        tools:listitem="@layout/item_list_content" />
+        tools:listitem="@layout/item_list_content_todo" />
 </FrameLayout>

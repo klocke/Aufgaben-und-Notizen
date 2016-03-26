@@ -16,4 +16,8 @@
     <string name="error_locality_not_found">Ort konnte nicht gefunden werden.</string>
     <string name="dialog_warning_permission_required">Sie müssen den Zugriff auf den Standort zulassen um diese Funktion nutzen zu können.\nDazu müssen Sie ggf. in die Einstellungen der App gehen.</string>
     <string name="error_insert_or_update_failed">Aktion ist fehlgeschlagen.</string>
+    <string name="deleteTitle">Löschen</string>
+    <string name="deleteMsg">löschen?</string>
+    <string name="deleteYes">Ja</string>
+    <string name="deleteNo">Nein</string>
 </resources>

@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.example.aufgabenundnotizen.R;
 import com.example.aufgabenundnotizen.models.Item;
+import com.example.aufgabenundnotizen.models.NoteItem;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +21,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<Item> mItems;
 
     private OnItemClickListener mOnItemClickListener;
+    private OnItemLongClickListener mOnItemLongClickListener;
+
 
     public RecyclerViewAdapter(List<Item> items) {
         mItems = items;
@@ -31,6 +34,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public interface OnItemClickListener {
         void onItemClick(Item item);
+    }
+
+    public interface OnItemLongClickListener {
+        boolean onItemLongClick(Item item);
     }
 
     public void swapData(List<Item> items) {
@@ -57,6 +64,29 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
+
+
+
+
+
+    public void deleteItem(Item item){
+        String itemId = item.getId();
+
+        // Anhand der Id finden, nicht Referenz.
+        int position = getPosition(itemId);
+
+        if (position != -1) {
+            mItems.remove(position);
+
+            this.notifyDataSetChanged();
+        }
+    }
+
+
+
+
+
+
     /**
      * @return -1 Wenn itemId nicht gefunden werden kann.
      */
@@ -68,7 +98,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 return i;
             }
         }
-
         return -1;
     }
 
@@ -76,15 +105,39 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         mOnItemClickListener = l;
     }
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_list_content, parent, false);
-        return new ViewHolder(view);
+    public void setOnItemLongClickListener(OnItemLongClickListener l) {
+        mOnItemLongClickListener = l;
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        switch(viewType) {
+            case 1:
+                View viewToDo = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_list_content_note, parent, false);
+                return new ViewHolder(viewToDo);
+            case 2:
+                View viewNote = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_list_content_todo, parent, false);
+                return new ViewHolder(viewNote);
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position){
+        Item item = mItems.get(position);
+
+        if(item instanceof NoteItem) {
+            return 1;
+        } else {
+            return 2;
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mItem = mItems.get(position);
         holder.mContentView.setText(mItems.get(position).getTitle());
 
@@ -93,6 +146,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 @Override
                 public void onClick(View v) {
                     mOnItemClickListener.onItemClick(holder.mItem);
+                }
+            });
+        }
+        if (mOnItemLongClickListener != null) {
+            holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mOnItemLongClickListener.onItemLongClick(holder.mItem);
+                    return true;
                 }
             });
         }

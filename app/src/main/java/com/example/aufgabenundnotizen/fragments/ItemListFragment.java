@@ -1,7 +1,9 @@
 package com.example.aufgabenundnotizen.fragments;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -34,10 +36,10 @@ import java.util.List;
  * Created by Tobias on 19.02.16.
  * TODO: http://stackoverflow.com/questions/15897547/loader-unable-to-retain-itself-during-certain-configuration-change
  */
-public class ItemListFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Item>>, RecyclerViewAdapter.OnItemClickListener {
+public class ItemListFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Item>>, RecyclerViewAdapter.OnItemClickListener,
+        RecyclerViewAdapter.OnItemLongClickListener{
 
     private FilterType mFilterType;
-
     private boolean mTwoPane;
 
     private RecyclerView mRecyclerView;
@@ -172,6 +174,7 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
 
         RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter();
         recyclerViewAdapter.setOnItemClickListener(this);
+        recyclerViewAdapter.setOnItemLongClickListener(this);
 
         recyclerView.setAdapter(recyclerViewAdapter);
         return recyclerViewAdapter;
@@ -198,6 +201,41 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
         } else {
             ItemDetailActivity.start(getContext(), itemId, filterType);
         }
+    }
+
+    @Override
+    public boolean onItemLongClick(Item item) {
+        alertDelete(item).show();
+        return false;
+    }
+
+    private AlertDialog alertDelete(final Item item) {
+        String itemType;
+
+        if (item instanceof NoteItem) {
+            itemType = "Note";
+        } else {
+            itemType = "Todo";
+        }
+
+        AlertDialog.Builder bldr = new AlertDialog.Builder(getContext());
+
+        bldr.setTitle(getString(R.string.deleteTitle));
+        bldr.setIcon(R.mipmap.ic_launcher);
+        bldr.setMessage(itemType + " " + getString(R.string.deleteMsg));
+        bldr.setPositiveButton(R.string.deleteYes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+                //TODO: Item löschen
+
+
+            }
+        });
+        bldr.setNegativeButton(R.string.deleteNo, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        return bldr.create();
     }
 
     private class RefreshItemsReceiver extends BroadcastReceiver {
