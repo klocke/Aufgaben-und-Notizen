@@ -229,6 +229,7 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
                 //TODO: Item löschen
 
 
+
             }
         });
         bldr.setNegativeButton(R.string.deleteNo, new DialogInterface.OnClickListener() {

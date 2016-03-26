@@ -145,6 +145,7 @@ public class ItemListActivity extends AppCompatActivity implements OnClickListen
 //
 //                    int lastPosition = DummyContent.ITEMS.size() - 1;
 //                    mRecyclerViewAdapter.notifyItemInserted(lastPosition);
+
 //                }
 
                 return true;

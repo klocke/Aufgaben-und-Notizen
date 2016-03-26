@@ -71,6 +71,7 @@ public class ItemDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/guide/components/fragments.html
             //
+
             if (savedInstanceState == null) {
                 // Erzeuge das detail Fragment und füge es der Activity
                 // mithilfe einer fragment Transaktion hinzu.

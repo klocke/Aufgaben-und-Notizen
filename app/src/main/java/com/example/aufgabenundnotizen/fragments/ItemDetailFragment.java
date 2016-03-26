@@ -228,6 +228,7 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
                 NoteItem noteItem = (NoteItem) mItem;
 
                 // TODO: weitere Felder setzen, z.B. Files
+
             }
         }
 
