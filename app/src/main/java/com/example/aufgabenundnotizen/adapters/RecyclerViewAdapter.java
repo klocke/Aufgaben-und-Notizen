@@ -64,10 +64,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-
-
-
-
     public void deleteItem(Item item){
         String itemId = item.getId();
 
@@ -80,13 +76,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             this.notifyDataSetChanged();
         }
     }
-
-
-
-
-
-
-
 
     /**
      * @return -1 Wenn itemId nicht gefunden werden kann.

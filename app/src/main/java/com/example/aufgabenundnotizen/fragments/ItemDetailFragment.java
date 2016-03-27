@@ -520,6 +520,12 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onPostExecute(int res) {
         ItemListFragment.sendBroadcast(getContext(), Constants.ACTION_REFRESH_ITEMS, mFilterType, mItem.getId(), mIsNewItem);
+
+        registerNotification();
+    }
+
+    private void registerNotification() {
+        // TODO: Tim
     }
 
     @Override
