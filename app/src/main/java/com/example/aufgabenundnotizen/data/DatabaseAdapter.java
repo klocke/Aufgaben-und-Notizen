@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
 
 import com.example.aufgabenundnotizen.helpers.JodaTimeUtils;
 import com.example.aufgabenundnotizen.models.Item;
@@ -95,6 +96,8 @@ public class DatabaseAdapter {
                 item = createItem(cursor, getColumnAllocation(cursor));
             }
 
+            Log.i("demo", "DatabaseAdapter getItem Time?" + ((TodoItem) item).getReminderDate());
+
             db.close();
         } catch (SQLiteException e) {
             e.printStackTrace();
@@ -161,6 +164,8 @@ public class DatabaseAdapter {
             String[] whereArgs = {
                     item.getId()
             };
+
+            Log.i("demo", "DatabaseAdapter updateItem Time?" + ((TodoItem) item).getReminderDate());
 
             affectedRows = db.update(TABLE_ITEM, createContentValues(item), KEY_ID + "=?", whereArgs);
 

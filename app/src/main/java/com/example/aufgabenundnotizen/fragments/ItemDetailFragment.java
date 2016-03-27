@@ -37,8 +37,8 @@ import com.example.aufgabenundnotizen.models.Item;
 import com.example.aufgabenundnotizen.models.NoteItem;
 import com.example.aufgabenundnotizen.models.TodoItem;
 import com.example.aufgabenundnotizen.other.CustomResultReceiver;
+import com.example.aufgabenundnotizen.other.DbActionTask;
 import com.example.aufgabenundnotizen.other.FilterType;
-import com.example.aufgabenundnotizen.other.InsertOrUpdateTask;
 import com.example.aufgabenundnotizen.services.FetchLocalityIntentService;
 import com.example.customviews.DateTimeView;
 import com.example.customviews.DateView;
@@ -56,7 +56,7 @@ import org.joda.time.LocalTime;
  * Es ist entweder in einer {@Link ItemListActivity} in Zwei-Fenster-Ansicht (z.B. Tablets)
  * oder in einer {@Link ItemDetailActivity} (z.B. Smartphone in Portraitausrichtung) enthalten.
  */
-public class ItemDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Item>, View.OnClickListener, View.OnFocusChangeListener, DateViewBase.OnHasChangesListener, TextWatcher, GoogleApiClient.OnConnectionFailedListener, InsertOrUpdateTask.Receiver {
+public class ItemDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Item>, View.OnClickListener, View.OnFocusChangeListener, DateViewBase.OnHasChangesListener, TextWatcher, GoogleApiClient.OnConnectionFailedListener, DbActionTask.Receiver {
 
     private Item mItem;
     private boolean mIsNewItem;
@@ -68,7 +68,7 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
 
     private boolean mPermissionRequest;
 
-    private InsertOrUpdateTask mInsertOrUpdateTask;
+    private DbActionTask mDbActionTask;
     private boolean mHasChanges;
     private boolean mIsInit = true;
 
@@ -266,8 +266,13 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
         Log.i("demo", "speichern? " + shouldSave);
 
         if (shouldSave) {
-            mInsertOrUpdateTask = new InsertOrUpdateTask(getContext(), this, mIsNewItem);
-            mInsertOrUpdateTask.execute();
+            if (mIsNewItem) {
+                mDbActionTask = new DbActionTask(getContext(), this, DbActionTask.Action.INSERT);
+            } else {
+                mDbActionTask = new DbActionTask(getContext(), this, DbActionTask.Action.UPDATE);
+            }
+
+            mDbActionTask.execute();
 
             registerNotification();
         }
@@ -516,12 +521,20 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
             }
         }
 
-        mInsertOrUpdateTask.setItem(mItem);
+        mDbActionTask.setItem(mItem);
     }
 
     @Override
     public void onPostExecute(int res) {
-        ItemListFragment.sendBroadcast(getContext(), Constants.ACTION_REFRESH_ITEMS, mFilterType, mItem.getId(), mIsNewItem);
+        DbActionTask.Action action = null;
+
+        if (mIsNewItem) {
+            action = DbActionTask.Action.INSERT;
+        } else {
+            action = DbActionTask.Action.UPDATE;
+        }
+
+        ItemListFragment.sendBroadcast(getContext(), Constants.ACTION_REFRESH_ITEMS, mFilterType, mItem.getId(), action);
     }
 
     private void registerNotification() {

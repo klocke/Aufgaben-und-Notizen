@@ -26,6 +26,7 @@ import com.example.aufgabenundnotizen.loaders.SingleItemLoader;
 import com.example.aufgabenundnotizen.models.Item;
 import com.example.aufgabenundnotizen.models.NoteItem;
 import com.example.aufgabenundnotizen.models.TodoItem;
+import com.example.aufgabenundnotizen.other.DbActionTask;
 import com.example.aufgabenundnotizen.other.DividerItemDecoration;
 import com.example.aufgabenundnotizen.other.FilterType;
 
@@ -36,8 +37,9 @@ import java.util.List;
  * Created by Tobias on 19.02.16.
  * TODO: http://stackoverflow.com/questions/15897547/loader-unable-to-retain-itself-during-certain-configuration-change
  */
-public class ItemListFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Item>>, RecyclerViewAdapter.OnItemClickListener,
-        RecyclerViewAdapter.OnItemLongClickListener{
+public class ItemListFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Item>>, RecyclerViewAdapter.OnItemClickListener {
+
+    private ItemDetailFragment mItemDetailFragment;
 
     private FilterType mFilterType;
     private boolean mTwoPane;
@@ -61,14 +63,14 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
         return fragment;
     }
 
-    public static void sendBroadcast(Context context, String action, FilterType filterType, String itemId, boolean isInsert) {
+    public static void sendBroadcast(Context context, String action, FilterType filterType, String itemId, DbActionTask.Action dbAction) {
         Intent intent = new Intent();
         intent.setAction(action);
 
         Bundle extras = new Bundle();
         extras.putSerializable(Constants.ARG_ITEMS_FILTER, filterType);
         extras.putString(Constants.ARG_ITEM_ID, itemId);
-        extras.putBoolean(Constants.ARG_IS_INSERT, isInsert);
+        extras.putSerializable(Constants.ARG_DB_ACTION, dbAction);
 
         intent.putExtras(extras);
 
@@ -174,7 +176,6 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
 
         RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter();
         recyclerViewAdapter.setOnItemClickListener(this);
-        recyclerViewAdapter.setOnItemLongClickListener(this);
 
         recyclerView.setAdapter(recyclerViewAdapter);
         return recyclerViewAdapter;
@@ -193,10 +194,10 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
         String itemId = item.getId();
 
         if (mTwoPane) {
-            ItemDetailFragment fragment = ItemDetailFragment.newInstance(itemId, filterType);
+            mItemDetailFragment = ItemDetailFragment.newInstance(itemId, filterType);
 
             getChildFragmentManager().beginTransaction()
-                    .replace(R.id.item_detail_container, fragment)
+                    .replace(R.id.item_detail_container, mItemDetailFragment)
                     .commit();
         } else {
             ItemDetailActivity.start(getContext(), itemId, filterType);
@@ -204,13 +205,12 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
-    public boolean onItemLongClick(Item item) {
+    public void onItemLongClick(final Item item) {
         alertActions(item).show();
-        return false;
     }
 
-    private AlertDialog alertActions(final Item item){
-        CharSequence actions[] = new CharSequence[]{"Widget erstellen", "Löschen"}; //Strings auslagern
+    private AlertDialog alertActions(final Item item) {
+        CharSequence actions[] = new CharSequence[]{getString(R.string.alertdialog_delete)};
 
         AlertDialog.Builder bldr = new AlertDialog.Builder(getContext());
 
@@ -219,9 +219,6 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
-
-                        break;
-                    case 1:
                         alertDelete(item).show();
                         break;
                 }
@@ -231,30 +228,48 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
         return bldr.create();
     }
 
-    private AlertDialog alertDelete(Item item) {
-        String itemType;
+    private AlertDialog alertDelete(final Item item) {
+        String msg = "";
 
         if (item instanceof NoteItem) {
-            itemType = "Note";
-        } else {
-            itemType = "Todo";
+            msg = "Möchten Sie die Notiz " + item.getTitle() + " wirklich löschen?";
+        } else if (item instanceof TodoItem) {
+            msg = "Möchten Sie die Aufgabe " + item.getTitle() + " wirklich löschen?";
         }
 
         AlertDialog.Builder bldr = new AlertDialog.Builder(getContext());
 
         bldr.setTitle(getString(R.string.deleteTitle));
         bldr.setIcon(R.mipmap.ic_launcher);
-        bldr.setMessage(itemType + " " + getString(R.string.deleteMsg));
+        bldr.setMessage(msg);
         bldr.setPositiveButton(R.string.deleteYes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
                 //TODO: Item löschen
+                DbActionTask deleteTask = new DbActionTask(getContext(), new DbActionTask.Receiver() {
+                    @Override
+                    public void onPreExecute() {
+                    }
+
+                    @Override
+                    public void onPostExecute(int res) {
+                        FilterType filterType = null;
+
+                        if (item instanceof TodoItem) {
+                            filterType = FilterType.TODOS;
+                        } else if (item instanceof NoteItem) {
+                            filterType = FilterType.NOTES;
+                        }
+                        Log.i("receiver", "sendBroadcast");
+                        ItemListFragment.sendBroadcast(getContext(), Constants.ACTION_REFRESH_ITEMS, filterType, item.getId(), DbActionTask.Action.DELETE);
+                    }
+                }, DbActionTask.Action.DELETE);
+
+                deleteTask.setItem(item);
+                deleteTask.execute();
             }
         });
-        bldr.setNegativeButton(R.string.deleteNo, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-            }
-        });
+        bldr.setNegativeButton(R.string.deleteNo, null);
         return bldr.create();
     }
 
@@ -274,14 +289,29 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
                     }
 
                     FilterType filterType = (FilterType) extras.getSerializable(Constants.ARG_ITEMS_FILTER);
+                    DbActionTask.Action dbAction = (DbActionTask.Action) extras.getSerializable(Constants.ARG_DB_ACTION);
 
                     Log.i("receiver", "filterType senden? " + filterType + "\nfilterType this? " + mFilterType);
 
                     if (filterType != null && (mFilterType == filterType || mFilterType == FilterType.ALL)) {
 
+                        // Es wird ein Loader benötigt
+                        if (dbAction == DbActionTask.Action.INSERT | dbAction == DbActionTask.Action.UPDATE) {
+                            getLoaderManager().initLoader(R.id.refresh_item_loader_id, extras, new LoaderCallbacks());
+                        }
+
                         Log.i("receiver", "itemId in onReceive? " + extras.getString(Constants.ARG_ITEM_ID));
 
-                        getLoaderManager().initLoader(R.id.refresh_item_loader_id, extras, new LoaderCallbacks());
+                        if (dbAction == DbActionTask.Action.DELETE) {
+                            mRecyclerViewAdapter.deleteItem(extras.getString(Constants.ARG_ITEM_ID));
+
+                            // Detail Fragment entfernen
+                            if (mItemDetailFragment != null) {
+                                getChildFragmentManager().beginTransaction()
+                                        .remove(mItemDetailFragment)
+                                        .commit();
+                            }
+                        }
                     }
                     break;
             }
@@ -304,11 +334,11 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
                 Log.i("receiver", "item loaded: " + data);
 
                 if (mArgs != null) {
-                    boolean isInsert = mArgs.getBoolean(Constants.ARG_IS_INSERT);
+                    DbActionTask.Action action = (DbActionTask.Action) mArgs.getSerializable(Constants.ARG_DB_ACTION);
 
-                    if (isInsert) {
+                    if (action == DbActionTask.Action.INSERT) {
                         mRecyclerViewAdapter.addItem(data);
-                    } else {
+                    } else if (action == DbActionTask.Action.UPDATE) {
                         mRecyclerViewAdapter.updateItem(data);
                     }
                 }

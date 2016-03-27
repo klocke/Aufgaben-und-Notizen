@@ -21,7 +21,7 @@ public final class Constants {
     public static final String ARG_RECEIVER = PACKAGE_NAME + ".RECEIVER";
     public static final String ARG_LOCATION_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
     public static final String ARG_RESULT_DATA_KEY = PACKAGE_NAME + ".RESULT_DATA_KEY";
-    public static final String ARG_IS_INSERT = PACKAGE_NAME + ".IS_INSERT";
+    public static final String ARG_DB_ACTION = PACKAGE_NAME + ".DB_ACTION";
 
     // Actions für Intents
     public static final String ACTION_REFRESH_ITEMS = Constants.PACKAGE_NAME + ".REFRESH_ITEM";
