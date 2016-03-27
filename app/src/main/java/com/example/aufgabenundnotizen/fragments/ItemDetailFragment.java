@@ -268,6 +268,8 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
         if (shouldSave) {
             mInsertOrUpdateTask = new InsertOrUpdateTask(getContext(), this, mIsNewItem);
             mInsertOrUpdateTask.execute();
+
+            registerNotification();
         }
     }
 
@@ -520,12 +522,11 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onPostExecute(int res) {
         ItemListFragment.sendBroadcast(getContext(), Constants.ACTION_REFRESH_ITEMS, mFilterType, mItem.getId(), mIsNewItem);
-
-        registerNotification();
     }
 
     private void registerNotification() {
         // TODO: Tim
+        // zur eindeutigen Identifizierung das mItem oder die ID mItem.getId() mitgeben
     }
 
     @Override
