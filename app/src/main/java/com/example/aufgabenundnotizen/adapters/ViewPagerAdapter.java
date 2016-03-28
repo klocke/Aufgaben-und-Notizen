@@ -9,8 +9,6 @@ import java.util.List;
 
 /**
  * Created by Tobias on 24.02.16.
- *
- * TODO: Evtl. durch FragmentStatePagerAdapter austauschen.
  */
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 

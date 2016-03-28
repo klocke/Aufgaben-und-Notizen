@@ -176,7 +176,7 @@ public abstract class DateViewBase extends PercentRelativeLayout implements View
         if (mDate != null) {
             dt = mDate.toDateTime(LocalTime.MIDNIGHT);
         } else {
-            dt = Utils.getGermanTime();
+            dt = Utils.getGermanDateTime();
         }
 
         DatePickerDialog dpd = DatePickerDialog.newInstance(
@@ -201,7 +201,7 @@ public abstract class DateViewBase extends PercentRelativeLayout implements View
         String formattedString;
         String pattern;
 
-        LocalDate dateNow = LocalDate.now(Utils.getGermanTimeZone());
+        LocalDate dateNow = LocalDate.now(Utils.getGermanDateTimeZone());
 
         if (date.isEqual(dateNow)) {
             formattedString = "Heute";

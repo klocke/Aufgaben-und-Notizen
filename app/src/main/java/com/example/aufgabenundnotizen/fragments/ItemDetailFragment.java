@@ -219,6 +219,9 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
 
                     mDtvDateTime.setDate(reminderLocalDate);
                     mDtvDateTime.setTime(reminderLocalTime);
+
+                    Log.i("demo", "item? " + mItem.getTitle() + " reminderLocalDate? " + reminderLocalDate);
+                    Log.i("demo", "item? " + mItem.getTitle() + " reminderLocalTime? " + reminderLocalTime);
                 }
 
                 if (mEdtLocation != null) {
@@ -345,7 +348,7 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
         Drawable drawable = mImvPlace.getDrawable();
         int newColor;
 
-        if ((id == R.id.edt_location && hasFocus)) {
+        if ((id == R.id.edt_location) && hasFocus) {
             newColor = ContextCompat.getColor(getContext(), R.color.colorAccent);
         } else {
             newColor = ContextCompat.getColor(getContext(), R.color.colorPrimaryDark);

@@ -80,4 +80,5 @@ public class DbActionTask extends AsyncTask<Void, Void, Integer> {
     public void setItem(Item item) {
         this.mItem = item;
     }
+
 }

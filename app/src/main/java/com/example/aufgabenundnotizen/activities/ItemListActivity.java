@@ -101,14 +101,14 @@ public class ItemListActivity extends AppCompatActivity implements OnClickListen
                 break;
             case R.id.fabAddTodo:
                 ItemDetailActivity.start(v.getContext(), null, FilterType.TODOS);
+                animateFab();
                 break;
             case R.id.fabAddNote:
                 ItemDetailActivity.start(v.getContext(), null, FilterType.NOTES);
+                animateFab();
                 break;
         }
     }
-
-
 
     private void animateFab() {
         if (mIsFabOpen) {

@@ -96,8 +96,6 @@ public class DatabaseAdapter {
                 item = createItem(cursor, getColumnAllocation(cursor));
             }
 
-            Log.i("demo", "DatabaseAdapter getItem Time?" + ((TodoItem) item).getReminderDate());
-
             db.close();
         } catch (SQLiteException e) {
             e.printStackTrace();
@@ -164,8 +162,6 @@ public class DatabaseAdapter {
             String[] whereArgs = {
                     item.getId()
             };
-
-            Log.i("demo", "DatabaseAdapter updateItem Time?" + ((TodoItem) item).getReminderDate());
 
             affectedRows = db.update(TABLE_ITEM, createContentValues(item), KEY_ID + "=?", whereArgs);
 
@@ -260,7 +256,14 @@ public class DatabaseAdapter {
 
         if (type.equals(TYPE_TODO)) {
             LocalDate dueDate = JodaTimeUtils.toLocalDate(cursor.getLong(columnAllocation.get(KEY_DUEDATE)));
+
+            Log.i("Joda", "createItem? " + title + " DueDate toLocalDate? " + JodaTimeUtils.toLocalDate(cursor.getLong(columnAllocation.get(KEY_DUEDATE))));
+
             DateTime reminderDate = JodaTimeUtils.toDateTime(cursor.getLong(columnAllocation.get(KEY_REMINDERDATE)));
+
+            Log.i("Joda", "createItem? " + title + " ReminderDate toDateTime? " + JodaTimeUtils.toDateTime(cursor.getLong(columnAllocation.get(KEY_REMINDERDATE))));
+
+
             String location = cursor.getString(columnAllocation.get(KEY_LOCATION));
             boolean done = getBoolean(cursor.getInt(columnAllocation.get(KEY_DONE)));
 
@@ -285,6 +288,10 @@ public class DatabaseAdapter {
             values.put(KEY_TYPE, TYPE_TODO);
             values.put(KEY_DUEDATE, JodaTimeUtils.toMillisSinceEpoch(todoItem.getDueDate()));
             values.put(KEY_REMINDERDATE, JodaTimeUtils.toMillisSinceEpoch(todoItem.getReminderDate()));
+
+            Log.i("Joda", "createContentValues? " + item.getTitle() + " ReminderDate? " + todoItem.getReminderDate());
+
+
             values.put(KEY_LOCATION, todoItem.getLocation());
             values.put(KEY_DONE, todoItem.getDone());
         } else if (item instanceof NoteItem) {

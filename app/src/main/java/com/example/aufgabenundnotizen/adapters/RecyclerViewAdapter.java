@@ -1,17 +1,26 @@
 package com.example.aufgabenundnotizen.adapters;
 
+import android.graphics.drawable.Drawable;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.aufgabenundnotizen.R;
+import com.example.aufgabenundnotizen.helpers.JodaTimeUtils;
 import com.example.aufgabenundnotizen.models.Item;
-import com.example.aufgabenundnotizen.models.NoteItem;
+import com.example.aufgabenundnotizen.models.TodoItem;
+
+import org.joda.time.LocalDate;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Tobias on 24.02.16.
@@ -21,6 +30,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<Item> mItems;
 
     private OnItemClickListener mOnItemClickListener;
+
+    private Map<Integer, Drawable> mDrawables;
+    private boolean mShowIcons;
 
     public RecyclerViewAdapter(List<Item> items) {
         mItems = items;
@@ -33,6 +45,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public interface OnItemClickListener {
         void onItemClick(Item item);
         void onItemLongClick(Item item);
+
+        void onItemCheckedChanged(Item item, boolean isChecked);
     }
 
     public void swapData(List<Item> items) {
@@ -67,7 +81,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         if (position != -1) {
             mItems.remove(position);
 
-            this.notifyDataSetChanged();
+            this.notifyItemRemoved(position);
         }
     }
 
@@ -95,35 +109,77 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        switch(viewType) {
-            case 1:
-                View viewToDo = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_list_content_note, parent, false);
-                return new ViewHolder(viewToDo);
-            case 2:
-                View viewNote = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.item_list_content_todo, parent, false);
-                return new ViewHolder(viewNote);
-            default:
-                return null;
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_list_content, parent, false);
+
+        ImageView imvIcon = (ImageView) v.findViewById(R.id.imv_icon);
+        AppCompatCheckBox chbItem = (AppCompatCheckBox) v.findViewById(R.id.chb_item);
+        TextView tevContent = (TextView) v.findViewById(R.id.content);
+        TextView tevDueDate = (TextView) v.findViewById(R.id.tev_duedate);
+
+        if (!mShowIcons) {
+            imvIcon.setVisibility(View.GONE);
         }
+
+        if (viewType == R.id.todo_item) {
+            if (mDrawables != null) {
+                Drawable drawable = mDrawables.get(R.id.todo_item);
+                imvIcon.setImageDrawable(drawable);
+            }
+
+        } else if (viewType == R.id.note_item) {
+            if (mDrawables != null) {
+                Drawable drawable = mDrawables.get(R.id.note_item);
+                imvIcon.setImageDrawable(drawable);
+            }
+
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tevContent.getLayoutParams();
+            params.setMargins(50, 0, 0, 0);
+
+            tevContent.setLayoutParams(params);
+
+            chbItem.setVisibility(View.GONE);
+            tevDueDate.setVisibility(View.GONE);
+        }
+
+        return new ViewHolder(v);
     }
 
     @Override
     public int getItemViewType(int position){
         Item item = mItems.get(position);
 
-        if(item instanceof NoteItem) {
-            return 1;
+        if (item instanceof TodoItem) {
+            return R.id.todo_item;
         } else {
-            return 2;
+            return R.id.note_item;
         }
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+        // init List Item
         holder.mItem = mItems.get(position);
         holder.mContentView.setText(mItems.get(position).getTitle());
+
+        Item item = mItems.get(position);
+
+        if (item instanceof TodoItem) {
+            // verhindern von Endlosrekursion
+            holder.mChbDone.setOnCheckedChangeListener(null);
+            holder.mChbDone.setChecked(((TodoItem) item).getDone());
+            holder.mChbDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    mOnItemClickListener.onItemCheckedChanged(holder.mItem, isChecked);
+                }
+            });
+
+            LocalDate dueDate = ((TodoItem) item).getDueDate();
+            String formattedDateString = JodaTimeUtils.getFormattedDateString(dueDate);
+
+            holder.mTevDueDate.setText(formattedDateString);
+        }
 
         if (mOnItemClickListener != null) {
             holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -143,20 +199,33 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
+
     @Override
     public int getItemCount() {
         return mItems.size();
     }
 
+    public void setDrawables(Map<Integer, Drawable> drawables) {
+        mDrawables = drawables;
+    }
+
+    public void setShowIcons(boolean showIcons) {
+        mShowIcons = showIcons;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mContentView;
+        public final AppCompatCheckBox mChbDone;
+        public final TextView mTevDueDate;
         public Item mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mContentView = (TextView) view.findViewById(R.id.content);
+            mChbDone = (AppCompatCheckBox) view.findViewById(R.id.chb_item);
+            mTevDueDate = (TextView) view.findViewById(R.id.tev_duedate);
         }
 
         @Override

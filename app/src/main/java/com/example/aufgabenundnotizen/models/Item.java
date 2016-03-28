@@ -1,6 +1,7 @@
 package com.example.aufgabenundnotizen.models;
 
 import com.example.aufgabenundnotizen.helpers.JodaTimeUtils;
+import com.example.aufgabenundnotizen.other.FilterType;
 
 import org.joda.time.DateTime;
 
@@ -26,7 +27,7 @@ public abstract class Item {
         mTitle = title;
         mNotes = notes;
         mId = UUID.randomUUID().toString(); // eindeutigen Schlüssel erzeugen
-        mCreationDate = JodaTimeUtils.getGermanTime(); // aktuellen Zeitpunkt speichern
+        mCreationDate = JodaTimeUtils.getGermanDateTime(); // aktuellen Zeitpunkt speichern
     }
 
     /**
@@ -70,6 +71,15 @@ public abstract class Item {
 
     public void setFiles(byte[] files) {
         mFiles = files;
+    }
+
+
+    public FilterType getFilterType() {
+        if (this instanceof TodoItem) {
+            return FilterType.TODOS;
+        } else {
+            return FilterType.NOTES;
+        }
     }
 
     @Override

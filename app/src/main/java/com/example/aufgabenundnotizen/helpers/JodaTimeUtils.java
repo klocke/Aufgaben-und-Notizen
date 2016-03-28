@@ -2,8 +2,11 @@ package com.example.aufgabenundnotizen.helpers;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.joda.time.Duration;
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.util.Locale;
 
 /**
  * Created by Tobias on 07.03.16.
@@ -15,14 +18,13 @@ public final class JodaTimeUtils {
     }
 
     private static final String CENTRAL_EUROPEAN_TIME_ID = "CET";
-    private static final DateTime JAN_1_1970 = new DateTime(1970, 1, 1, 0, 0, DateTimeZone.UTC);
 
-    public static DateTimeZone getGermanTimeZone() {
+    public static DateTimeZone getGermanDateTimeZone() {
         return DateTimeZone.forID(CENTRAL_EUROPEAN_TIME_ID);
     }
 
-    public static DateTime getGermanTime() {
-        return new DateTime(getGermanTimeZone());
+    public static DateTime getGermanDateTime() {
+        return new DateTime(getGermanDateTimeZone());
     }
 
     /**
@@ -35,7 +37,7 @@ public final class JodaTimeUtils {
             return 0;
         }
 
-        return new Duration(JAN_1_1970, dateTime).getMillis();
+        return dateTime.getMillis();
     }
 
     public static long toMillisSinceEpoch(LocalDate localDate) {
@@ -43,7 +45,7 @@ public final class JodaTimeUtils {
             return 0;
         }
 
-        return new Duration(JAN_1_1970, localDate.toDateTimeAtStartOfDay(getGermanTimeZone())).getMillis();
+        return localDate.toDateTimeAtStartOfDay(getGermanDateTimeZone()).getMillis();
     }
 
     public static DateTime toDateTime(long millisSinceEpoch) {
@@ -51,7 +53,7 @@ public final class JodaTimeUtils {
             return null;
         }
 
-        return new DateTime(millisSinceEpoch, getGermanTimeZone());
+        return new DateTime(millisSinceEpoch, getGermanDateTimeZone());
     }
 
     public static LocalDate toLocalDate(long millisSinceEpoch) {
@@ -59,7 +61,37 @@ public final class JodaTimeUtils {
             return null;
         }
 
-        return new LocalDate(millisSinceEpoch, getGermanTimeZone());
+        return new LocalDate(millisSinceEpoch, getGermanDateTimeZone());
+    }
+
+    public static String getFormattedDateString(LocalDate date) {
+        if (date == null) {
+            return "";
+        }
+
+        String formattedString;
+        String pattern;
+
+        LocalDate dateNow = LocalDate.now(getGermanDateTimeZone());
+
+        if (date.isEqual(dateNow)) {
+            formattedString = "Heute";
+        } else if (date.equals(dateNow.minusDays(1))) {
+            formattedString = "Gestern";
+        } else if (date.equals(dateNow.plusDays(1))) {
+            formattedString = "Morgen";
+        } else {
+            if (date.getYear() == dateNow.getYear()) {
+                pattern = "EEE d. MMM";
+            } else {
+                pattern = "EEE d. MMM yyyy";
+            }
+
+            DateTimeFormatter dtf = DateTimeFormat.forPattern(pattern);
+            formattedString = dtf.withLocale(Locale.GERMANY).print(date);
+        }
+
+        return formattedString;
     }
 
 }

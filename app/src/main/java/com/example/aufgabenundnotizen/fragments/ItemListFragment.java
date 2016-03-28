@@ -6,11 +6,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,7 +34,9 @@ import com.example.aufgabenundnotizen.other.DividerItemDecoration;
 import com.example.aufgabenundnotizen.other.FilterType;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Tobias on 19.02.16.
@@ -50,6 +55,8 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
     private boolean mIsReceiverRegistered;
     private BroadcastReceiver mReceiver;
     private LocalBroadcastManager mLocalBroadcastManager;
+
+    private volatile boolean mUpdatedDone;
 
     // Leerkonstruktor wird benötigt
     public ItemListFragment() {
@@ -122,6 +129,26 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
         super.onStart();
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser) {
+            // Nach oben scrollen
+            if (mRecyclerView != null) {
+                mRecyclerView.scrollToPosition(0);
+            }
+        } else {
+            // Wenn man zu einer anderen Page swiped,
+            // Detail Fragment zerstören
+            if (mItemDetailFragment != null) {
+                getChildFragmentManager().beginTransaction()
+                        .remove(mItemDetailFragment)
+                        .commit();
+            }
+        }
+    }
+
     public void registerBroadcastReceiver() {
         if (mReceiver == null) {
             mReceiver = new RefreshItemsReceiver();
@@ -174,8 +201,25 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
         decoration.setPadding(dividerPaddingLeft);
         recyclerView.addItemDecoration(decoration);
 
+        DefaultItemAnimator animator = new DefaultItemAnimator();
+        animator.setRemoveDuration(500);
+        recyclerView.setItemAnimator(animator);
+
         RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter();
         recyclerViewAdapter.setOnItemClickListener(this);
+
+        Drawable drawableTodo = ContextCompat.getDrawable(getContext(), R.drawable.ic_todo);
+        Drawable drawableNote = ContextCompat.getDrawable(getContext(), R.drawable.ic_note);
+        Map<Integer, Drawable> drawables = new HashMap<>();
+        drawables.put(R.id.todo_item, drawableTodo);
+        drawables.put(R.id.note_item, drawableNote);
+        recyclerViewAdapter.setDrawables(drawables);
+
+        if (mFilterType == FilterType.ALL) {
+            recyclerViewAdapter.setShowIcons(true);
+        } else {
+            recyclerViewAdapter.setShowIcons(false);
+        }
 
         recyclerView.setAdapter(recyclerViewAdapter);
         return recyclerViewAdapter;
@@ -207,6 +251,22 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onItemLongClick(final Item item) {
         alertActions(item).show();
+    }
+
+    @Override
+    public void onItemCheckedChanged(Item item, boolean isChecked) {
+        Log.i("demo", "item? " + item.getTitle() + " isChecked? " + isChecked);
+
+        DbActionTask updateDoneTask = new DbActionTask(getContext(), null, DbActionTask.Action.UPDATE);
+
+        if (item instanceof TodoItem) {
+            ((TodoItem) item).setDone(isChecked);
+        }
+
+        updateDoneTask.setItem(item);
+        updateDoneTask.execute();
+
+        ItemListFragment.sendBroadcast(getContext(), Constants.ACTION_REFRESH_ITEMS, item.getFilterType(), item.getId(), DbActionTask.Action.UPDATE);
     }
 
     private AlertDialog alertActions(final Item item) {
@@ -245,7 +305,6 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
         bldr.setPositiveButton(R.string.deleteYes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
-                //TODO: Item löschen
                 DbActionTask deleteTask = new DbActionTask(getContext(), new DbActionTask.Receiver() {
                     @Override
                     public void onPreExecute() {
@@ -350,6 +409,5 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
             public void onLoaderReset(Loader<Item> loader) {
             }
         }
-
     }
 }

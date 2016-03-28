@@ -21,7 +21,7 @@ import org.joda.time.LocalDate;
 class DatabaseHandler extends SQLiteOpenHelper {
 
     // Meta infos
-    static final int DATABASE_VERSION = 6;
+    static final int DATABASE_VERSION = 7;
     static final String DATABASE_NAME = "items.db";
 
     // Tabellen
@@ -119,7 +119,7 @@ class DatabaseHandler extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
 
             if (i % 2 == 0) {
-                TodoItem todoItem = new TodoItem("todo " + i, "todoNotes " + i, new LocalDate(JodaTimeUtils.getGermanTimeZone()), JodaTimeUtils.getGermanTime(), "todoLocation " + i);
+                TodoItem todoItem = new TodoItem("todo " + i, "todoNotes " + i, new LocalDate(JodaTimeUtils.getGermanDateTimeZone()), JodaTimeUtils.getGermanDateTime(), "todoLocation " + i);
 
                 values.put(KEY_TYPE, TYPE_TODO);
                 values.put(KEY_ID, todoItem.getId());

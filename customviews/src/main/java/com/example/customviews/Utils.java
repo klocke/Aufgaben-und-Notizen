@@ -8,7 +8,6 @@ import android.util.DisplayMetrics;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.joda.time.Duration;
 
 /**
  * Created by Tobias on 07.03.16.
@@ -56,18 +55,12 @@ public final class Utils {
 
     private static final String CENTRAL_EUROPEAN_TIME_ID = "CET";
 
-    public static DateTimeZone getGermanTimeZone() {
+    public static DateTimeZone getGermanDateTimeZone() {
         return DateTimeZone.forID(CENTRAL_EUROPEAN_TIME_ID);
     }
 
-    public static DateTime getGermanTime() {
-        return new DateTime(getGermanTimeZone());
-    }
-
-    private static final DateTime JAN_1_1970 = new DateTime(1970, 1, 1, 0, 0, DateTimeZone.UTC);
-
-    public static long toMillisSinceEpoch(DateTime dateTime) {
-        return new Duration(JAN_1_1970, dateTime).getMillis();
+    public static DateTime getGermanDateTime() {
+        return new DateTime(getGermanDateTimeZone());
     }
 
 }

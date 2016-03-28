@@ -104,8 +104,8 @@ public class DateTimeView extends DateViewBase implements TimePickerDialog.OnTim
         DateTime dateTime = (DateTime) stateData.getSerializable(ARG_DATETIME);
 
         if (dateTime != null) {
-            setDate(dateTime.toLocalDate());
-            setTime(dateTime.toLocalTime());
+            setDate(new LocalDate(dateTime, Utils.getGermanDateTimeZone()));
+            setTime(new LocalTime(dateTime, Utils.getGermanDateTimeZone()));
         }
     }
 
@@ -145,7 +145,7 @@ public class DateTimeView extends DateViewBase implements TimePickerDialog.OnTim
         if (mTime != null) {
             dt = mTime.toDateTimeToday();
         } else {
-            dt = Utils.getGermanTime();
+            dt = Utils.getGermanDateTime();
         }
 
         TimePickerDialog tpd = TimePickerDialog.newInstance(
@@ -178,8 +178,7 @@ public class DateTimeView extends DateViewBase implements TimePickerDialog.OnTim
 
             // Wenn noch keine Zeit gesetzt wurde, dann auf 8 Uhr setzen
             if (mTime == null) {
-                DateTime dateTime = Utils.getGermanTime();
-                setTime(LocalTime.MIDNIGHT);
+                setTime(new LocalTime(Utils.getGermanDateTimeZone()).withHourOfDay(8));
             }
         } else {
             mTevDate.setText("");
@@ -202,12 +201,12 @@ public class DateTimeView extends DateViewBase implements TimePickerDialog.OnTim
             // ausgewählte Zeit vor oder nach aktueller Zeit liegt und
             // entspr. Datum auf Heute oder Morgen setzen
             if (mDate == null) {
-                DateTime dateTime = Utils.getGermanTime();
+                DateTime dateTime = Utils.getGermanDateTime();
 
                 if (mTime.isAfter(dateTime.toLocalTime())) {
-                    setDate(dateTime.toLocalDate());
+                    setDate(new LocalDate(dateTime, Utils.getGermanDateTimeZone()));
                 } else {
-                    setDate(dateTime.toLocalDate().plusDays(1));
+                    setDate(new LocalDate(dateTime, Utils.getGermanDateTimeZone()).plusDays(1));
                 }
             }
 
@@ -218,15 +217,25 @@ public class DateTimeView extends DateViewBase implements TimePickerDialog.OnTim
 
     public DateTime getDateTime() {
         if (mDate != null) {
+
             if (mTime != null) {
-                return mDate.toDateTime(mTime);
+
+                return mDate.toDateTime(mTime, Utils.getGermanDateTimeZone());
+
             } else {
-                return mDate.toDateTime(LocalTime.MIDNIGHT);
+
+                return mDate.toDateTime(LocalTime.MIDNIGHT, Utils.getGermanDateTimeZone());
+
             }
+
         } else {
+
             if (mTime != null) {
-                return mTime.toDateTimeToday();
+
+                return new DateTime(mTime, Utils.getGermanDateTimeZone());
+
             } else {
+
                 return null;
             }
         }
