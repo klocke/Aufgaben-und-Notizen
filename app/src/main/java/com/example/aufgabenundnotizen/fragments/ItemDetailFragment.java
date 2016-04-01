@@ -3,7 +3,6 @@ package com.example.aufgabenundnotizen.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -11,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -82,8 +80,6 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
     private ImageView mImvMyLocality;
 
     private EditText mEdtNotes;
-
-    private View mFivFile;
 
     /**
      * Zwingend notwendiger Leerkonstruktor für den fragment manager um das Fragment
@@ -157,11 +153,6 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
 
         mEdtNotes.addTextChangedListener(this);
 
-        // Files
-        mFivFile = rootView.findViewById(R.id.fiv_file);
-
-        mFivFile.setOnClickListener(this);
-
         Bundle args = getArguments();
         if (args != null) {
             mIsNewItem = args.getString(Constants.ARG_ITEM_ID) == null;
@@ -227,11 +218,6 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
                 if (mEdtLocation != null) {
                     mEdtLocation.setText(todoItem.getLocation());
                 }
-            } else if (mItem instanceof NoteItem) {
-                NoteItem noteItem = (NoteItem) mItem;
-
-                // TODO: weitere Felder setzen, z.B. Files
-
             }
         }
 
@@ -312,32 +298,6 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
 
         if (id == R.id.imv_my_locality) {
             getMyLocality();
-        } else if (id == R.id.fiv_file) {
-
-            CharSequence actions[] = new CharSequence[]{"Bibliothek", "Kamera", "Sprachmemo"};
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setTitle("Datei hinzufügen");
-            builder.setItems(actions, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which) {
-                        case 0:
-                            Intent pickPhoto = new Intent(Intent.ACTION_PICK,
-                                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            startActivityForResult(pickPhoto, 1);//one can be replaced with any action code
-
-                            break;
-                        case 1:
-                            Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            startActivityForResult(takePicture, 0);//zero can be replaced with any action code
-
-                            break;
-                    }
-                }
-            });
-            builder.show();
-
         }
     }
 
@@ -370,8 +330,6 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
             Location location = getCurrentLocationWrapper();
 
             if (location != null) {
-                // TODO: Wenn nach 3 Sek keine Antwort geliefert wird, dann Service abbrechen und Message ausgeben.
-
                 CustomResultReceiver resultReceiver = new CustomResultReceiver(new Handler(), new CustomResultReceiver.Receiver() {
                     @Override
                     public void onReceiveResult(int resultCode, Bundle resultData) {
@@ -432,7 +390,6 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
         // Dieser Aufruf erfordert Permission(s) und führt ohne Prüfung zu einer Exception.
         // Die Programmlogik stellt sicher, dass die erforderliche Permission gesetzt ist.
         // Daher wird die Warnung unterdrückt.
-        // TODO: Verhalten auf echtem Gerät testen
         return LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
     }
 
@@ -517,9 +474,6 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
                 ((TodoItem) mItem).setDueDate(dueDate);
                 ((TodoItem) mItem).setReminderDate(reminderDate);
                 ((TodoItem) mItem).setLocation(location);
-
-            } else if (mItem instanceof NoteItem) {
-                // TODO:
 
             }
         }

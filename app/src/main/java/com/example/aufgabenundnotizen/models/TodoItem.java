@@ -10,7 +10,7 @@ public class TodoItem extends Item {
 
     private LocalDate mDueDate;
     private DateTime mReminderDate;
-    private String mLocation;   // TODO
+    private String mLocation;
     private boolean mDone;
 
     /**

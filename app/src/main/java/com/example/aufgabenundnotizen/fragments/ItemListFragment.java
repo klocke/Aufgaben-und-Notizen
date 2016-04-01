@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,7 +41,6 @@ import java.util.Map;
 
 /**
  * Created by Tobias on 19.02.16.
- * TODO: http://stackoverflow.com/questions/15897547/loader-unable-to-retain-itself-during-certain-configuration-change
  */
 public class ItemListFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Item>>, RecyclerViewAdapter.OnItemClickListener {
 
@@ -136,7 +136,8 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
         if (isVisibleToUser) {
             // Nach oben scrollen
             if (mRecyclerView != null) {
-                mRecyclerView.scrollToPosition(0);
+                // Letzte Position, weil das Layout "umgedreht" ist
+                mRecyclerView.scrollToPosition(mRecyclerViewAdapter.getItemCount() - 1);
             }
         } else {
             // Wenn man zu einer anderen Page swiped,
@@ -197,12 +198,20 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
     private RecyclerViewAdapter setupRecyclerView(RecyclerView recyclerView) {
         int dividerPaddingLeft = getResources().getDimensionPixelSize(R.dimen.divider_padding_left);
 
+        // Neueste Items immer oben anzeigen
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        manager.setReverseLayout(true);
+        manager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(manager);
+
         DividerItemDecoration decoration = new DividerItemDecoration(getContext());
         decoration.setPadding(dividerPaddingLeft);
         recyclerView.addItemDecoration(decoration);
 
         DefaultItemAnimator animator = new DefaultItemAnimator();
-        animator.setRemoveDuration(500);
+        animator.setAddDuration(300);
+        animator.setMoveDuration(300);
+        animator.setRemoveDuration(300);
         recyclerView.setItemAnimator(animator);
 
         RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter();
@@ -397,6 +406,7 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
 
                     if (action == DbActionTask.Action.INSERT) {
                         mRecyclerViewAdapter.addItem(data);
+                        mRecyclerView.scrollToPosition(mRecyclerViewAdapter.getItemCount() - 1);
                     } else if (action == DbActionTask.Action.UPDATE) {
                         mRecyclerViewAdapter.updateItem(data);
                     }

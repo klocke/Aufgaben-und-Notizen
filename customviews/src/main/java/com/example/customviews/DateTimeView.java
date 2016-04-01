@@ -178,7 +178,7 @@ public class DateTimeView extends DateViewBase implements TimePickerDialog.OnTim
 
             // Wenn noch keine Zeit gesetzt wurde, dann auf 8 Uhr setzen
             if (mTime == null) {
-                setTime(new LocalTime(Utils.getGermanDateTimeZone()).withHourOfDay(8));
+                setTime(new LocalTime(Utils.getGermanDateTimeZone()).withHourOfDay(8).withMinuteOfHour(0));
             }
         } else {
             mTevDate.setText("");

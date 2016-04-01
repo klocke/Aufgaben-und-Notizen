@@ -4,11 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -29,7 +25,6 @@ import com.example.aufgabenundnotizen.other.FilterType;
  */
 public class ItemListActivity extends AppCompatActivity implements OnClickListener {
 
-    private Toolbar mToolbar;
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
@@ -41,15 +36,6 @@ public class ItemListActivity extends AppCompatActivity implements OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
-
-        // Toolbar initialisieren
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);   // Toolbar als app bar für diese activity setzen
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);    // Title nicht anzeigen
-        }
 
         // Tabs initialisieren
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -125,35 +111,6 @@ public class ItemListActivity extends AppCompatActivity implements OnClickListen
             mFabAddTodo.setClickable(true);
             mFabAddNote.setClickable(true);
             mIsFabOpen = true;
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_add_item:
-                // ...
-//                if (mRecyclerViewAdapter != null) {
-//                    TodoItem newItem = new TodoItem("Neues TODO", new Date());
-//                    DummyContent.addItem(newItem);
-//
-//                    int lastPosition = DummyContent.ITEMS.size() - 1;
-//                    mRecyclerViewAdapter.notifyItemInserted(lastPosition);
-
-//                }
-
-                return true;
-            case R.id.action_settings:
-                // ...
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
     }
 

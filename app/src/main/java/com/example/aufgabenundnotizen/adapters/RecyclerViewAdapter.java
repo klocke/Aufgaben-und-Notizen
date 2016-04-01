@@ -18,6 +18,7 @@ import com.example.aufgabenundnotizen.models.TodoItem;
 
 import org.joda.time.LocalDate;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ import java.util.Map;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private List<Item> mItems;
+    private List<TodoItem> mDoneItems = new ArrayList<>();
 
     private OnItemClickListener mOnItemClickListener;
 
@@ -51,13 +53,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public void swapData(List<Item> items) {
         mItems = items;
+
         this.notifyDataSetChanged();
     }
 
     public void addItem(Item item) {
         mItems.add(item);
 
-        this.notifyDataSetChanged();
+        this.notifyItemInserted(mItems.size() - 1);
     }
 
     public void updateItem(Item item) {
@@ -83,10 +86,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             this.notifyItemRemoved(position);
         }
-    }
-
-    public void sort() {
-
     }
 
     /**
@@ -199,10 +198,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-
     @Override
     public int getItemCount() {
         return mItems.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return super.getItemId(position);
     }
 
     public void setDrawables(Map<Integer, Drawable> drawables) {

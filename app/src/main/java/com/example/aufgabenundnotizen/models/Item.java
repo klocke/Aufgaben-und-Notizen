@@ -16,9 +16,6 @@ public abstract class Item {
     protected String mTitle;
     protected DateTime mCreationDate;
     protected String mNotes;
-    protected byte[] mFiles;    // List byte Array?!
-
-    // TODO Notes?!
 
     /**
      * Konstruktor für neues Item.
@@ -64,15 +61,6 @@ public abstract class Item {
     public void setNotes(String notes) {
         mNotes = notes;
     }
-
-    public byte[] getFiles() {
-        return mFiles;
-    }
-
-    public void setFiles(byte[] files) {
-        mFiles = files;
-    }
-
 
     public FilterType getFilterType() {
         if (this instanceof TodoItem) {

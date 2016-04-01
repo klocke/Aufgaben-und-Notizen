@@ -76,7 +76,6 @@ public abstract class DateViewBase extends PercentRelativeLayout implements View
     public final void onClick(View v) {
         int id = v.getId();
 
-        // TODO: schauen ob das bei beiden funktioniert
         if (id == R.id.imv_reset) {
             onViewReset();
         } else {
