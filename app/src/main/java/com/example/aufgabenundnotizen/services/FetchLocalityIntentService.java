@@ -8,7 +8,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.ResultReceiver;
-import android.util.Log;
 
 import com.example.aufgabenundnotizen.helpers.Constants;
 
@@ -44,8 +43,6 @@ public class FetchLocalityIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         mReceiver = intent.getParcelableExtra(Constants.ARG_RECEIVER);
         Location location = intent.getParcelableExtra(Constants.ARG_LOCATION_DATA_EXTRA);
-
-        Log.i("demo", "loation? " + location + "receiver? " + mReceiver);
 
         if (location == null | mReceiver == null) {
             return;

@@ -211,8 +211,6 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
                     mDtvDateTime.setDate(reminderLocalDate);
                     mDtvDateTime.setTime(reminderLocalTime);
 
-                    Log.i("demo", "item? " + mItem.getTitle() + " reminderLocalDate? " + reminderLocalDate);
-                    Log.i("demo", "item? " + mItem.getTitle() + " reminderLocalTime? " + reminderLocalTime);
                 }
 
                 if (mEdtLocation != null) {
@@ -252,8 +250,6 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
             shouldSave = mHasChanges;
         }
 
-        Log.i("demo", "speichern? " + shouldSave);
-
         if (shouldSave) {
             if (mIsNewItem) {
                 mDbActionTask = new DbActionTask(getContext(), this, DbActionTask.Action.INSERT);
@@ -274,8 +270,6 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
 
     @Override
     public void onLoadFinished(Loader<Item> loader, Item data) {
-        Log.i("demo", "onLoadFinished");
-
         mItem = data;
         init();
 
@@ -287,8 +281,6 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
     }
 
     private void loadData() {
-        Log.i("demo", "loadData");
-
         getLoaderManager().initLoader(R.id.single_item_loader_id, getArguments(), this);
     }
 
@@ -437,8 +429,6 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
 
         if (mEdtTitle != null) {
             title = mEdtTitle.getText().toString();
-
-            Log.i("demo", "title? " + title);
         }
 
         if (mEdtNotes != null) {

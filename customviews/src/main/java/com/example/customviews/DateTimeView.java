@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -186,9 +185,6 @@ public class DateTimeView extends DateViewBase implements TimePickerDialog.OnTim
     }
 
     public void setTime(LocalTime time) {
-
-        Log.i("time", "setTime? " + time);
-
         this.mTime = time;
         if (mOnHasChangesListener != null) {
             mOnHasChangesListener.onHasChanges(this, true);

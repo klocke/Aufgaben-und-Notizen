@@ -2,7 +2,6 @@ package com.example.aufgabenundnotizen.other;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.example.aufgabenundnotizen.data.DatabaseAdapter;
 import com.example.aufgabenundnotizen.models.Item;
@@ -64,7 +63,6 @@ public class DbActionTask extends AsyncTask<Void, Void, Integer> {
                 // in der Klasse, die sich um die Notifications kümmert, eine entspr. Methode updateNotification o.ä. aufrufen.
 
             } else if (mAction == Action.DELETE) {
-                Log.i("demo", "delete item on database");
                 mDatabaseAdapter.deleteItem(mItem);
 
                 // TODO @Tim

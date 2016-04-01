@@ -264,8 +264,6 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onItemCheckedChanged(Item item, boolean isChecked) {
-        Log.i("demo", "item? " + item.getTitle() + " isChecked? " + isChecked);
-
         DbActionTask updateDoneTask = new DbActionTask(getContext(), null, DbActionTask.Action.UPDATE);
 
         if (item instanceof TodoItem) {
