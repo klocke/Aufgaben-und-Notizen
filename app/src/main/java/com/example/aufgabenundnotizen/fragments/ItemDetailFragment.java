@@ -2,7 +2,11 @@ package com.example.aufgabenundnotizen.fragments;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -10,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -37,6 +42,8 @@ import com.example.aufgabenundnotizen.models.TodoItem;
 import com.example.aufgabenundnotizen.other.CustomResultReceiver;
 import com.example.aufgabenundnotizen.other.DbActionTask;
 import com.example.aufgabenundnotizen.other.FilterType;
+import com.example.aufgabenundnotizen.other.MapWrapper;
+import com.example.aufgabenundnotizen.other.NotificationReceiver;
 import com.example.aufgabenundnotizen.services.FetchLocalityIntentService;
 import com.example.customviews.DateTimeView;
 import com.example.customviews.DateView;
@@ -44,10 +51,14 @@ import com.example.customviews.DateViewBase;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.gson.Gson;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Dieses Fragment stellt eine einzelne Item Detailansicht dar.
@@ -80,6 +91,8 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
     private ImageView mImvMyLocality;
 
     private EditText mEdtNotes;
+    private HashMap<String, Integer> hm;
+
 
     /**
      * Zwingend notwendiger Leerkonstruktor für den fragment manager um das Fragment
@@ -259,7 +272,9 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
 
             mDbActionTask.execute();
 
-            registerNotification();
+            if (mItem instanceof TodoItem) {
+                registerNotification();
+            }
         }
     }
 
@@ -464,7 +479,6 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
                 ((TodoItem) mItem).setDueDate(dueDate);
                 ((TodoItem) mItem).setReminderDate(reminderDate);
                 ((TodoItem) mItem).setLocation(location);
-
             }
         }
 
@@ -484,12 +498,67 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
         ItemListFragment.sendBroadcast(getContext(), Constants.ACTION_REFRESH_ITEMS, mFilterType, mItem.getId(), action);
     }
 
-    private void registerNotification() {
-        // TODO: Tim
-        // zur eindeutigen Identifizierung das mItem oder die ID mItem.getId() mitgeben
+    public void registerNotification(){
+        TodoItem tItem = (TodoItem) mItem;
+        boolean remNull = false;
+
+        if (tItem.getReminderDate() == null){
+            remNull = true;
+        }
+
+        Gson gson = new Gson();
+        String hmS = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("ITEM_HM","");
+        if (hmS == "") {
+            hm = new HashMap();
+        }else {
+            MapWrapper wrapperGet = gson.fromJson(hmS, MapWrapper.class);
+            hm = wrapperGet.getHm();
+        }
+
+        int i = 0;
+        Double ii;
+
+        if (hm.containsKey(tItem.getId())){
+            ii = (Double.parseDouble((String .valueOf(hm.get(tItem.getId())))));
+            i = ii.intValue();
+        } else if (remNull == false) {
+            for (Map.Entry<String, Integer> entry : hm.entrySet()) {
+                ii = Double.parseDouble(String.valueOf(entry.getValue()));
+
+                if (ii.intValue() > i) {
+                    i = ii.intValue();
+                }
+            }
+            i++;
+
+            hm.put(tItem.getId(), i);
+        }else{
+            //Item ist nicht in HashMap und hat reminderDate auf null;
+            return;
+        }
+
+        AlarmManager alarmMgr = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getContext(), NotificationReceiver.class);
+        intent.putExtra("item_title", tItem.getTitle());
+        intent.putExtra("item_id", tItem.getId());
+        intent.putExtra("not_id", i);
+
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(getContext(), i, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        if (remNull == false) {
+            alarmMgr.set(AlarmManager.RTC, tItem.getReminderDate().getMillis(), alarmIntent);
+        }else{
+            alarmMgr.cancel(alarmIntent);
+            hm.remove(tItem.getId());
+        }
+
+        MapWrapper wrapperSet = new MapWrapper();
+        wrapperSet.setHm(hm);
+        String serializedMap = gson.toJson(wrapperSet);
+        PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString("ITEM_HM", serializedMap).commit();
     }
 
-    @Override
+        @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
     }
 
