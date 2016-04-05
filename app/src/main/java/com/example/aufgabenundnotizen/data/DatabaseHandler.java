@@ -21,7 +21,7 @@ import org.joda.time.LocalDate;
 class DatabaseHandler extends SQLiteOpenHelper {
 
     // Meta infos
-    static final int DATABASE_VERSION = 8;
+    static final int DATABASE_VERSION = 11;
     static final String DATABASE_NAME = "items.db";
 
     // Tabellen

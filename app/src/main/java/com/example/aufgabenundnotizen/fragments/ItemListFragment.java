@@ -333,10 +333,22 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
 
                 deleteTask.setItem(item);
                 deleteTask.execute();
+
+                unregisterNotification(item);
             }
         });
         bldr.setNegativeButton(R.string.deleteNo, null);
         return bldr.create();
+    }
+
+    private void unregisterNotification(Item item) {
+        boolean isTodoItem = item instanceof TodoItem;
+
+        if (!isTodoItem) {
+            return;
+        }
+
+        // TODO: Tim
     }
 
     private class RefreshItemsReceiver extends BroadcastReceiver {
@@ -399,7 +411,7 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
             public void onLoadFinished(Loader<Item> loader, Item data) {
                 Log.i("receiver", "item loaded: " + data);
 
-                if (mArgs != null) {
+                if (mArgs != null && data != null) {
                     DbActionTask.Action action = (DbActionTask.Action) mArgs.getSerializable(Constants.ARG_DB_ACTION);
 
                     if (action == DbActionTask.Action.INSERT) {

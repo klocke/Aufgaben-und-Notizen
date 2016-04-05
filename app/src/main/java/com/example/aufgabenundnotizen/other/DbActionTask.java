@@ -53,20 +53,11 @@ public class DbActionTask extends AsyncTask<Void, Void, Integer> {
             if (mAction == Action.INSERT) {
                 mDatabaseAdapter.addItem(mItem);
 
-                // TODO @Tim
-                // in der Klasse, die sich um die Notifications kümmert, eine entspr. Methode registerNotification o.ä. aufrufen.
-
             } else if (mAction == Action.UPDATE) {
                 mDatabaseAdapter.updateItem(mItem);
 
-                // TODO @Tim
-                // in der Klasse, die sich um die Notifications kümmert, eine entspr. Methode updateNotification o.ä. aufrufen.
-
             } else if (mAction == Action.DELETE) {
                 mDatabaseAdapter.deleteItem(mItem);
-
-                // TODO @Tim
-                // in der Klasse, die sich um die Notifications kümmert, eine entspr. Methode removeNotification o.ä. aufrufen.
 
             }
         }

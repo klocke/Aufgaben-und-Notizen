@@ -498,7 +498,7 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
         ItemListFragment.sendBroadcast(getContext(), Constants.ACTION_REFRESH_ITEMS, mFilterType, mItem.getId(), action);
     }
 
-    public void registerNotification(){
+    private void registerNotification(){
         TodoItem tItem = (TodoItem) mItem;
         boolean remNull = false;
 
@@ -510,7 +510,7 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
         String hmS = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("ITEM_HM","");
         if (hmS == "") {
             hm = new HashMap();
-        }else {
+        } else {
             MapWrapper wrapperGet = gson.fromJson(hmS, MapWrapper.class);
             hm = wrapperGet.getHm();
         }
