@@ -1,6 +1,8 @@
 package com.example.aufgabenundnotizen.fragments;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
@@ -33,6 +36,9 @@ import com.example.aufgabenundnotizen.models.TodoItem;
 import com.example.aufgabenundnotizen.other.DbActionTask;
 import com.example.aufgabenundnotizen.other.DividerItemDecoration;
 import com.example.aufgabenundnotizen.other.FilterType;
+import com.example.aufgabenundnotizen.other.MapWrapper;
+import com.example.aufgabenundnotizen.other.NotificationReceiver;
+import com.google.gson.Gson;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -334,21 +340,56 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
                 deleteTask.setItem(item);
                 deleteTask.execute();
 
-                unregisterNotification(item);
+                if (item instanceof TodoItem){
+                    unregisterNotification((TodoItem) item);
+                }
             }
         });
         bldr.setNegativeButton(R.string.deleteNo, null);
         return bldr.create();
     }
 
-    private void unregisterNotification(Item item) {
-        boolean isTodoItem = item instanceof TodoItem;
+    private void unregisterNotification(TodoItem tItem){
+        HashMap hm;
 
-        if (!isTodoItem) {
+        if (tItem.getReminderDate() == null) {
             return;
         }
 
-        // TODO: Tim
+        Gson gson = new Gson();
+        String hmS = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("ITEM_HM","");
+        if (hmS == "") {
+            hm = new HashMap();
+        }else {
+            MapWrapper wrapperGet = gson.fromJson(hmS, MapWrapper.class);
+            hm = wrapperGet.getHm();
+        }
+
+        int i = 0;
+        Double ii;
+
+        if (hm.containsKey(tItem.getId())){
+            ii = (Double.parseDouble((String .valueOf(hm.get(tItem.getId())))));
+            i = ii.intValue();
+        } else {
+            return;
+        }
+
+        AlarmManager alarmMgr = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getContext(), NotificationReceiver.class);
+        intent.putExtra("item_title", tItem.getTitle());
+        intent.putExtra("item_id", tItem.getId());
+        intent.putExtra("not_id", i);
+
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(getContext(), i, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        alarmMgr.cancel(alarmIntent);
+        hm.remove(tItem.getId());
+
+        MapWrapper wrapperSet = new MapWrapper();
+        wrapperSet.setHm(hm);
+        String serializedMap = gson.toJson(wrapperSet);
+        PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString("ITEM_HM", serializedMap).commit();
     }
 
     private class RefreshItemsReceiver extends BroadcastReceiver {
@@ -411,7 +452,7 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
             public void onLoadFinished(Loader<Item> loader, Item data) {
                 Log.i("receiver", "item loaded: " + data);
 
-                if (mArgs != null && data != null) {
+                if (mArgs != null) {
                     DbActionTask.Action action = (DbActionTask.Action) mArgs.getSerializable(Constants.ARG_DB_ACTION);
 
                     if (action == DbActionTask.Action.INSERT) {
