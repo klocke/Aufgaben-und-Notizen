@@ -532,7 +532,7 @@ public class ItemDetailFragment extends Fragment implements LoaderManager.Loader
             i++;
 
             hm.put(tItem.getId(), i);
-        }else{
+        } else {
             //Item ist nicht in HashMap und hat reminderDate auf null;
             return;
         }

@@ -294,7 +294,6 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
                 }
             }
         });
-
         return bldr.create();
     }
 
