@@ -357,7 +357,7 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
         String hmS = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("ITEM_HM","");
         if (hmS == "") {
             hm = new HashMap();
-        }else {
+        } else {
             MapWrapper wrapperGet = gson.fromJson(hmS, MapWrapper.class);
             hm = wrapperGet.getHm();
         }
