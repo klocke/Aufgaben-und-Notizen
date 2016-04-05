@@ -379,7 +379,6 @@ public class ItemListFragment extends Fragment implements LoaderManager.LoaderCa
         intent.putExtra("not_id", i);
 
         PendingIntent alarmIntent = PendingIntent.getBroadcast(getContext(), i, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
         alarmMgr.cancel(alarmIntent);
         hm.remove(tItem.getId());
 
