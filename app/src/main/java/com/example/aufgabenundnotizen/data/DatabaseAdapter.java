@@ -34,8 +34,6 @@ import static com.example.aufgabenundnotizen.data.DatabaseHandler.TYPE_NOTE;
 import static com.example.aufgabenundnotizen.data.DatabaseHandler.TYPE_TODO;
 
 /**
- * Created by Tobias on 22.02.16.
- * <p>
  * Hier wird der Teil der Datenbankschicht, der verantwortlich für Query, Insert, Update oder Delete Operationen ist, implementiert.
  * Es wird das Singleton Pattern verwendet um sicherzustellen, dass zu einem Zeitpunkt nur eine Instanz existiert.
  */

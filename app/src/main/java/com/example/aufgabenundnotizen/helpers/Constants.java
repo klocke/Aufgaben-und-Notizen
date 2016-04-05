@@ -3,7 +3,6 @@ package com.example.aufgabenundnotizen.helpers;
 import com.example.aufgabenundnotizen.BuildConfig;
 
 /**
- * Created by Tobias on 02.03.16.
  * Diese Klasse enthält eindeutige Schlüssel,
  * die innerhalb der App für Datenaustausche verwendet werden.
  */

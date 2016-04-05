@@ -3,9 +3,7 @@ package com.example.aufgabenundnotizen.models;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
-/**
- * Created by Tobias on 16.02.16.
- */
+
 public class TodoItem extends Item {
 
     private LocalDate mDueDate;

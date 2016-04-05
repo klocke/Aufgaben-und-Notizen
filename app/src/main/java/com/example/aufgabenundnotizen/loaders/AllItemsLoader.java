@@ -8,9 +8,6 @@ import com.example.aufgabenundnotizen.other.FilterType;
 
 import java.util.List;
 
-/**
- * Created by Tobias on 25.02.16.
- */
 public class AllItemsLoader extends BaseLoader<List<Item>> {
 
     private FilterType mFilterType;

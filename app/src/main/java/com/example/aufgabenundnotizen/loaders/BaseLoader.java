@@ -10,7 +10,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.example.aufgabenundnotizen.helpers.Constants;
 
 /**
- * Created by Tobias on 25.02.16.
  * Diese Klasse stellt eine eigene Implementierung des AsyncTaskLoaders dar,
  * die als Basisklasse für spezifische Loader verwendet werden soll.
  * Sie erlaubt eine höhere Kontrolle über die Automatismen von Loadern.

@@ -7,9 +7,6 @@ import org.joda.time.DateTime;
 
 import java.util.UUID;
 
-/**
- * Created by Tobias on 22.02.16.
- */
 public abstract class Item {
 
     protected String mId;

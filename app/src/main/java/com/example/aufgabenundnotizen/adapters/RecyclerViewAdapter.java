@@ -23,9 +23,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Tobias on 24.02.16.
- */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private List<Item> mItems;

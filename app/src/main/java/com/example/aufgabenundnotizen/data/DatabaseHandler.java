@@ -13,8 +13,6 @@ import com.example.aufgabenundnotizen.models.TodoItem;
 import org.joda.time.LocalDate;
 
 /**
- * Created by Tobias on 22.02.16.
- * <p>
  * Hier wird die Struktur der Datenbank definiert und aufgebaut (onCreate),
  * sowie Änderungen an dieser (onUpgrade).
  */

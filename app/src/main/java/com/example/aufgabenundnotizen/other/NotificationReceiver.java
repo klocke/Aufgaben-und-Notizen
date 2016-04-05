@@ -14,9 +14,6 @@ import com.google.gson.Gson;
 
 import java.util.HashMap;
 
-/**
- * Created by Tim on 28.03.16.
- */
 public class NotificationReceiver extends BroadcastReceiver {
 
     @Override

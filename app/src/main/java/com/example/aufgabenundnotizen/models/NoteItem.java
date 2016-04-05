@@ -2,9 +2,6 @@ package com.example.aufgabenundnotizen.models;
 
 import org.joda.time.DateTime;
 
-/**
- * Created by Tobias on 16.02.16.
- */
 public class NoteItem extends Item {
 
     /**

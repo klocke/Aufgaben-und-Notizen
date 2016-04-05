@@ -6,9 +6,6 @@ import android.os.AsyncTask;
 import com.example.aufgabenundnotizen.data.DatabaseAdapter;
 import com.example.aufgabenundnotizen.models.Item;
 
-/**
- * Created by Tobias on 16.03.16.
- */
 public class DbActionTask extends AsyncTask<Void, Void, Integer> {
 
     private Receiver mReceiver;

@@ -45,9 +45,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Tobias on 19.02.16.
- */
 public class ItemListFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Item>>, RecyclerViewAdapter.OnItemClickListener {
 
     private ItemDetailFragment mItemDetailFragment;

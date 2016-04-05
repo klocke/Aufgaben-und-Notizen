@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Created by Tobias on 11.03.16.
  * Diese Klasse handhabt Abfragen asynchron auf einem Workerthread und
  * stoppt sich selber, wenn die Verarbeitung abgeschlossen ist.
  */

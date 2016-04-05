@@ -3,9 +3,6 @@ package com.example.aufgabenundnotizen.helpers;
 import android.content.Context;
 import android.widget.Toast;
 
-/**
- * Created by Tobias on 11.03.16.
- */
 public final class Message {
 
     private Message() {

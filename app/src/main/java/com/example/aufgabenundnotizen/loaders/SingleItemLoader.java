@@ -5,9 +5,6 @@ import android.content.Context;
 import com.example.aufgabenundnotizen.data.DatabaseAdapter;
 import com.example.aufgabenundnotizen.models.Item;
 
-/**
- * Created by Tobias on 25.02.16.
- */
 public class SingleItemLoader extends BaseLoader<Item> {
 
     private String mItemId;

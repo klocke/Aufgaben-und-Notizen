@@ -8,9 +8,6 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Locale;
 
-/**
- * Created by Tobias on 07.03.16.
- */
 public final class JodaTimeUtils {
 
     private JodaTimeUtils() {
